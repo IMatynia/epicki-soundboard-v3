@@ -1,0 +1,6 @@
+.pytest*
+__pycach*
+*.pyc
+.qt_for_python
+.vscode/
+_notes/
