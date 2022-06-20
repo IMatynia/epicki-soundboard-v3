@@ -2,9 +2,11 @@ import json
 
 OPTION_VERSION = "V1.0"
 
+
 class MissingConfigFieldError(Exception):
     def __init__(self, field_name) -> None:
         super().__init__(f"Config file is missing field [{field_name}]")
+
 
 class Options:
     def __init__(self) -> None:
@@ -52,13 +54,13 @@ class Options:
             dict: key value pairs
         """
         out = {
-            "conf-version" : OPTION_VERSION
+            "conf-version": OPTION_VERSION
         }
         for key in self.__dict__:
             if key[0:3] == "_s_":
                 out[key[3::]] = self.__dict__[key]
         return out
-    
+
     def get_additional_device_name(self):
         return self._s_additional_device
 
@@ -70,7 +72,7 @@ class Options:
 
     def get_window_v_pos(self):
         return self._s_window_v_pos
-    
+
     def get_play_on_main(self):
         """Should i play the audio on the primary device too?
 
@@ -86,10 +88,14 @@ class Options:
             bool: the anwser
         """
         return self._s_singular
-    
+
     def get_loudness(self):
         return self._loudness_multiplier
-    
+
     def set_additional_device(self, name, id):
         self._s_additional_device = name
         self._s_additional_device_number = id
+
+    def set_play_on_main(self, value):
+        assert isinstance(value, bool)
+        self._s_main_on = value

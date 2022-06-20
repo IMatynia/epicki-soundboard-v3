@@ -2,8 +2,10 @@ import subprocess
 from logging import info
 from src.utils import check_if_program_present_in_path
 
+
 class FFMPEGNotInPathError(Exception):
     pass
+
 
 def ffmpeg_conversion(in_file, out_file, params=""):
     if not check_if_program_present_in_path("ffmpeg"):
