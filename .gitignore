@@ -4,3 +4,6 @@ __pycach*
 .qt_for_python
 .vscode/
 _notes/
+*.ogg
+*.mp3
+make
