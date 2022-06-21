@@ -1,5 +1,7 @@
 import logging as log
 import sys
+from PySide2.QtWidgets import QApplication
+from ui.main_window import MainWindow
 
 log.basicConfig(
     format="[%(asctime)s->%(levelname)s->%(module)s" +
@@ -10,7 +12,10 @@ log.basicConfig(
 
 
 def main(args):
-    pass
+    app = QApplication(args)
+    window = MainWindow(app)
+    window.show()
+    return app.exec_()
 
 
 if __name__ == "__main__":
