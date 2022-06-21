@@ -30,7 +30,8 @@ class MultiAudioPlayThread(threading.Thread):
                                                         dtype="float32",
                                                         channels=sound_data.channels,
                                                         device=self._options.get_additional_device_num())
-            info(f"Now playing {self._filename} ({sound_data.frames/sound_data.samplerate : 0.2f} s) on device {self._options.get_additional_device_name()}")
+            info(
+                f"Now playing {self._filename} ({sound_data.frames/sound_data.samplerate : 0.2f} s) on device {self._options.get_additional_device_name()}")
 
             main_device.start()
             secondary_device.start()
