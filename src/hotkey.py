@@ -1,6 +1,7 @@
+
 def make_hotkey_from_dict(dict):
     return Hotkey(
-        dict["keys"],
+        set(dict["keys"]),
         dict["filename"],
         dict["page"]
     )
@@ -51,7 +52,7 @@ class Hotkey:
 
     def save_as_dict(self):
         return {
-            "keys": self._keys,
+            "keys": list(self._keys),
             "filename": self._filename,
             "page": self._page
         }
@@ -65,6 +66,7 @@ class HotkeyCollisionError(Exception):
 
 class HotkeyList:
     def __init__(self, max_size=256) -> None:
+        self._max_size = max_size
         self._pages = [list() for i in range(max_size)]
 
     def add_hotkey(self, hotkey):
@@ -81,7 +83,11 @@ class HotkeyList:
     def check_collision(self, hotkey):
         return hotkey in self._pages[hotkey.get_page()]
 
+    def purge_data(self):
+        self._pages = [list() for i in range(self._max_size)]
+
     def load_from_list(self, list):
+        self.purge_data()
         for hotkey_data in list:
             self.add_hotkey(make_hotkey_from_dict(hotkey_data))
 

@@ -6,7 +6,7 @@ from PySide2.QtWidgets import (
 )
 from logging import info
 from src.settings import Settings, CONFIG_FILENAME
-from src.hotkey import Hotkey, HotkeyList, make_hotkey_from_dict
+from src.hotkey import HotkeyList
 from ui.dialog_add_edit_file import AddEditFileDialog
 
 
@@ -37,7 +37,6 @@ class MainWindow(QMainWindow):
         info(f"selection: {self._ui.tvHotkeys.selectedItems()[0].text()}")
 
     def on_add_hotkey(self, selected_type):
-        info(f"Adding a new hotkey using {selected_type}")
         if selected_type == "Audio file":
             # Open dialog window
             dialog = AddEditFileDialog(self, self._hotkeys, self._current_page)
@@ -46,8 +45,10 @@ class MainWindow(QMainWindow):
             if dialog.exec_():
                 new_hotkey = dialog.get_hotkey()
                 self._hotkeys.add_hotkey(new_hotkey)
-                self.reload_table_contents()
-                info(f"New hotkey added: {new_hotkey}")
+        elif selected_type == "Youtube-dl":
+            pass
+        elif selected_type == "Current TTS":
+            pass
 
     def on_edit_hotkey(self):
         keys = scan_pressed_keys()
@@ -88,7 +89,7 @@ class MainWindow(QMainWindow):
                 "settings": self._settings.save_to_dict(),
                 "hotkeys": self._hotkeys.save_to_list()
             }
-            json.dump(data, config_file)
+            json.dump(data, config_file, indent=4)
         info("Settings and hotkeys saved!")
 
     def reload_config(self):
@@ -100,3 +101,5 @@ class MainWindow(QMainWindow):
             info("Settings and hotkeys reloaded!")
         except FileNotFoundError:
             info("Missing config file, using default settings")
+        except json.JSONDecodeError:
+            info("Config file invalid, using default settings")
