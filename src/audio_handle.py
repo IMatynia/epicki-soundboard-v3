@@ -10,6 +10,11 @@ _ALL_AUDIO_THREADS = []
 BLOCK_SIZE = 1024
 
 
+class InvalidDeviceIDError(Exception):
+    def __init__(self, id) -> None:
+        super().__init__(f"Device of id {id} is invalid!")
+
+
 class MultiAudioPlayThread(threading.Thread):
     def __init__(self, filename, options: "Settings", args=(), kwargs=None):
         threading.Thread.__init__(self, args=(), kwargs=None)
@@ -22,14 +27,21 @@ class MultiAudioPlayThread(threading.Thread):
 
     def run(self):
         with soundfile.SoundFile(self._filename) as sound_data:
-            # Set up audio streams TODO: this
+            # Get the right device ID
+            invalid_device = False
+            additiona_device_number = self._options.get_additional_device_num()
+            if additiona_device_number < 0 or additiona_device_number >= len(get_devices()):
+                info("Invalid device id, playing on default device!")
+                additiona_device_number = sounddevice.default.device
+                invalid_device = True
+
             main_device = sounddevice.OutputStream(samplerate=sound_data.samplerate,
                                                    dtype="float32",
                                                    channels=sound_data.channels)
             secondary_device = sounddevice.OutputStream(samplerate=sound_data.samplerate,
                                                         dtype="float32",
                                                         channels=sound_data.channels,
-                                                        device=self._options.get_additional_device_num())
+                                                        device=additiona_device_number)
             info(
                 f"Now playing {self._filename} ({sound_data.frames/sound_data.samplerate : 0.2f} s) on device {self._options.get_additional_device()}")
 
@@ -39,7 +51,7 @@ class MultiAudioPlayThread(threading.Thread):
             for block in sound_data.blocks(blocksize=BLOCK_SIZE, dtype="float32"):
                 processed_block = self.audio_processor(block)
                 secondary_device.write(processed_block)
-                if self._options.get_play_on_main():
+                if self._options.get_play_on_main() and not invalid_device:
                     main_device.write(processed_block)
 
                 if self._stopped:
