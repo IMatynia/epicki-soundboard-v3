@@ -2,6 +2,8 @@ import logging as log
 import sys
 from PySide2.QtWidgets import QApplication
 from ui.main_window import MainWindow
+import os
+from src.audio_handle import stop_all_sounds
 
 log.basicConfig(
     format="[%(asctime)s->%(levelname)s->%(module)s" +
@@ -11,11 +13,26 @@ log.basicConfig(
 )
 
 
+def setup():
+    try:
+        os.mkdir("custom_default")
+    except FileExistsError:
+        # good
+        pass
+
+
+def closure():
+    stop_all_sounds()
+
+
 def main(args):
+    setup()
     app = QApplication(args)
     window = MainWindow(app)
     window.show()
-    return app.exec_()
+    ret_value = app.exec_()
+    closure()
+    return ret_value
 
 
 if __name__ == "__main__":
