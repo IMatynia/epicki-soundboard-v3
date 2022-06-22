@@ -5,7 +5,7 @@ from ui.main_window import MainWindow
 
 log.basicConfig(
     format="[%(asctime)s->%(levelname)s->%(module)s" +
-    "->%(funcName)s]: %(message)s\n",
+    "->%(funcName)s]: %(message)s",
     datefmt="%H:%M:%S",
     level=log.INFO
 )

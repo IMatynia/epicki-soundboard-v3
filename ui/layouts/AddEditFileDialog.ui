@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dialog</class>
- <widget class="QDialog" name="dialog">
+ <class>AddEditFileDialog</class>
+ <widget class="QDialog" name="AddEditFileDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>319</width>
-    <height>124</height>
+    <width>326</width>
+    <height>162</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,24 +17,34 @@
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="leFilePath">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>Path to file</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="bScanKeys">
        <property name="text">
         <string>Set keys</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="lKeys">
        <property name="text">
         <string>Awaiting input</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="bChooseFile">
        <property name="text">
         <string>Select file</string>
        </property>
@@ -59,7 +69,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>dialog</receiver>
+   <receiver>AddEditFileDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -75,7 +85,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>dialog</receiver>
+   <receiver>AddEditFileDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
