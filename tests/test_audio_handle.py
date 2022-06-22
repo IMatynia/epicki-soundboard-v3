@@ -1,10 +1,10 @@
 from time import sleep
 import src.audio_handle as audio
-from src.options import Options
+from src.settings import Settings
 
 
 def test_playback_play_and_stop_single():
-    opt = Options()
+    opt = Settings()
     opt.set_additional_device("default", audio.sounddevice.default.device)
     opt.set_play_on_main(False)
     th = audio.MultiAudioPlayThread("sigma.ogg", opt)
