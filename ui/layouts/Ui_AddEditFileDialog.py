@@ -17,11 +17,12 @@ class Ui_AddEditFileDialog(object):
     def setupUi(self, AddEditFileDialog):
         if not AddEditFileDialog.objectName():
             AddEditFileDialog.setObjectName(u"AddEditFileDialog")
-        AddEditFileDialog.resize(326, 162)
+        AddEditFileDialog.resize(370, 131)
         self.verticalLayout = QVBoxLayout(AddEditFileDialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
         self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setSizeConstraint(QLayout.SetMaximumSize)
         self.leFilePath = QLineEdit(AddEditFileDialog)
         self.leFilePath.setObjectName(u"leFilePath")
 
@@ -43,20 +44,38 @@ class Ui_AddEditFileDialog(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.bChooseFile)
 
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.formLayout.setItem(2, QFormLayout.FieldRole, self.verticalSpacer)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
-        self.buttonBox = QDialogButtonBox(AddEditFileDialog)
-        self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setOrientation(Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setSizeConstraint(QLayout.SetMinimumSize)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.verticalLayout.addWidget(self.buttonBox)
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.bSave = QPushButton(AddEditFileDialog)
+        self.bSave.setObjectName(u"bSave")
+
+        self.horizontalLayout.addWidget(self.bSave)
+
+        self.bCancel = QPushButton(AddEditFileDialog)
+        self.bCancel.setObjectName(u"bCancel")
+
+        self.horizontalLayout.addWidget(self.bCancel)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
 
         self.retranslateUi(AddEditFileDialog)
-        self.buttonBox.accepted.connect(AddEditFileDialog.accept)
-        self.buttonBox.rejected.connect(AddEditFileDialog.reject)
+
+        self.bSave.setDefault(True)
+
 
         QMetaObject.connectSlotsByName(AddEditFileDialog)
     # setupUi
@@ -70,5 +89,7 @@ class Ui_AddEditFileDialog(object):
         self.bScanKeys.setText(QCoreApplication.translate("AddEditFileDialog", u"Set keys", None))
         self.lKeys.setText(QCoreApplication.translate("AddEditFileDialog", u"Awaiting input", None))
         self.bChooseFile.setText(QCoreApplication.translate("AddEditFileDialog", u"Select file", None))
+        self.bSave.setText(QCoreApplication.translate("AddEditFileDialog", u"Save", None))
+        self.bCancel.setText(QCoreApplication.translate("AddEditFileDialog", u"Cancel", None))
     # retranslateUi
 
