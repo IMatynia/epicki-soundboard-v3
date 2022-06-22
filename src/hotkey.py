@@ -41,7 +41,7 @@ class Hotkey:
         self._page = page
 
     def __hash__(self) -> int:
-        return hash(self._page) + hash(self._keys)
+        return hash(self._page) + hash("".join(sorted(list(self._keys))))
 
     def __eq__(self, other):
         # There can only be one hotkey with given keys per page
@@ -76,6 +76,9 @@ class HotkeyList:
 
     def get_page(self, page_number):
         return self._pages[page_number]
+
+    def get_max_pages(self):
+        return self._max_size
 
     def remove_hotkey(self, hotkey):
         self._pages[hotkey.get_page()].remove(hotkey)
