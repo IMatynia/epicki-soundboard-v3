@@ -1,4 +1,4 @@
-from src.options import Options
+from src.settings import Settings
 import sounddevice
 import soundfile
 import threading
@@ -11,7 +11,7 @@ BLOCK_SIZE = 1024
 
 
 class MultiAudioPlayThread(threading.Thread):
-    def __init__(self, filename, options: "Options", args=(), kwargs=None):
+    def __init__(self, filename, options: "Settings", args=(), kwargs=None):
         threading.Thread.__init__(self, args=(), kwargs=None)
         self.daemon = True
         self._stopped = False
@@ -31,7 +31,7 @@ class MultiAudioPlayThread(threading.Thread):
                                                         channels=sound_data.channels,
                                                         device=self._options.get_additional_device_num())
             info(
-                f"Now playing {self._filename} ({sound_data.frames/sound_data.samplerate : 0.2f} s) on device {self._options.get_additional_device_name()}")
+                f"Now playing {self._filename} ({sound_data.frames/sound_data.samplerate : 0.2f} s) on device {self._options.get_additional_device()}")
 
             main_device.start()
             secondary_device.start()
