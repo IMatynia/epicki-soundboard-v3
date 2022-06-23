@@ -88,6 +88,7 @@ class AddEditFileDialog(QDialog):
                     self._hotkey.set_filename(ogg_filename)
                     self.accept()
             else:
+                # No ffmpeg available
                 err_box.setText(
                     "This file format is not supported. Add FFMPEG to PATH to automatically convert")
         else:

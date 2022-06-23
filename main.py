@@ -4,6 +4,7 @@ from PySide2.QtWidgets import QApplication
 from ui.main_window import MainWindow
 import os
 from src.audio_handle import stop_all_sounds
+from src.constants import DEFAULT_CUSTOM_FOLDER
 
 log.basicConfig(
     format="[%(asctime)s->%(levelname)s->%(module)s" +
@@ -15,7 +16,7 @@ log.basicConfig(
 
 def setup():
     try:
-        os.mkdir("custom_default")
+        os.mkdir(DEFAULT_CUSTOM_FOLDER)
     except FileExistsError:
         # good
         pass
