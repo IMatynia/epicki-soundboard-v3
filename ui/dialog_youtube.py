@@ -9,7 +9,7 @@ import threading
 from src.hotkey_reader import scan_pressed_keys
 from src.youtube_dl_handle import download_media
 from src.ffmpeg_handle import ffmpeg_conversion
-from src.constants import DEFAULT_CUSTOM_FOLDER
+from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_YTDL_FILE
 
 
 class AddYoutubeDialog(QDialog):
@@ -73,11 +73,11 @@ class AddYoutubeDialog(QDialog):
                 self.set_status("Downloading media via YT-DL", percentage)
 
         # Download mp3 via YT-DL
-        download_media(url, "tempYTDL.mp3", callback)
+        download_media(url, TEMP_YTDL_FILE, callback)
         # Download finished, FFMPEG conversion
         self.set_status("Converting to OGG via FFMPEG", 95.0)
-        ffmpeg_conversion("tempYTDL.mp3", destination)
-        remove("tempYTDL.mp3")
+        ffmpeg_conversion(TEMP_YTDL_FILE, destination)
+        remove(TEMP_YTDL_FILE)
         self.on_save_complete()
 
     def on_save_complete(self):
