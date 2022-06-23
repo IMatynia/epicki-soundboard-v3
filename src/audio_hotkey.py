@@ -1,10 +1,4 @@
-
-def make_hotkey_from_dict(dict):
-    return AudioHotkey(
-        set(dict["keys"]),
-        dict["filename"],
-        dict["page"]
-    )
+from src.keyboard_hotkeys import Key
 
 
 class AudioHotkey:
@@ -12,11 +6,13 @@ class AudioHotkey:
         """Creates an instance of soundboard hotkey
 
         Args:
-            keys (set): a set of pressed named keys
+            keys (set): a set of pressed keys (Key objects)
             filename (str): the audio file to play
             page (int): page number where the hotkey is located
         """
         assert page is None or page >= 0
+        assert keys is None or isinstance(keys, set)
+
         self._keys = keys
         self._filename = filename
         self._page = page
@@ -31,6 +27,7 @@ class AudioHotkey:
         return self._keys
 
     def set_keys(self, new_keys):
+        assert isinstance(new_keys, set)
         self._keys = new_keys
 
     def get_page(self):
@@ -50,9 +47,18 @@ class AudioHotkey:
     def __str__(self) -> str:
         return f"Hotkey {self._keys} activating file {self._filename}"
 
+    def load_from_dict(self, dict):
+        self._page = dict["page"]
+        self._filename = dict["filename"]
+        self._keys = set()
+        for key_dict in dict["keys"]:
+            key = Key()
+            key.load_from_dict(key_dict)
+            self._keys.add(key)
+
     def save_as_dict(self):
         return {
-            "keys": list(self._keys),
+            "keys": [key.save_to_dict() for key in self._keys],
             "filename": self._filename,
             "page": self._page
         }
@@ -92,7 +98,9 @@ class AudioHotkeyList:
     def load_from_list(self, list):
         self.purge_data()
         for hotkey_data in list:
-            self.add_hotkey(make_hotkey_from_dict(hotkey_data))
+            hk = AudioHotkey()
+            hk.load_from_dict(hotkey_data)
+            self.add_hotkey(hk)
 
     def save_to_list(self):
         out = []
