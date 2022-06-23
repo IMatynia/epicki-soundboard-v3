@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
-    <height>539</height>
+    <width>636</width>
+    <height>529</height>
    </rect>
   </property>
   <property name="font">
@@ -63,6 +63,12 @@
       </attribute>
       <attribute name="verticalHeaderCascadingSectionResizes">
        <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderMinimumSectionSize">
+       <number>20</number>
+      </attribute>
+      <attribute name="verticalHeaderDefaultSectionSize">
+       <number>22</number>
       </attribute>
       <attribute name="verticalHeaderHighlightSections">
        <bool>false</bool>
@@ -259,8 +265,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>603</width>
-     <height>22</height>
+     <width>636</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuData">

@@ -17,7 +17,7 @@ class Ui_AddEditFileDialog(object):
     def setupUi(self, AddEditFileDialog):
         if not AddEditFileDialog.objectName():
             AddEditFileDialog.setObjectName(u"AddEditFileDialog")
-        AddEditFileDialog.resize(370, 131)
+        AddEditFileDialog.resize(360, 131)
         self.verticalLayout = QVBoxLayout(AddEditFileDialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()

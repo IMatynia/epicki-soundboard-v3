@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(603, 539)
+        MainWindow.resize(636, 529)
         font = QFont()
         font.setFamily(u"Ubuntu")
         font.setBold(False)
@@ -59,6 +59,8 @@ class Ui_MainWindow(object):
         self.tvHotkeys.horizontalHeader().setStretchLastSection(True)
         self.tvHotkeys.verticalHeader().setVisible(False)
         self.tvHotkeys.verticalHeader().setCascadingSectionResizes(False)
+        self.tvHotkeys.verticalHeader().setMinimumSectionSize(20)
+        self.tvHotkeys.verticalHeader().setDefaultSectionSize(22)
         self.tvHotkeys.verticalHeader().setHighlightSections(False)
         self.tvHotkeys.verticalHeader().setProperty("showSortIndicator", False)
         self.tvHotkeys.verticalHeader().setStretchLastSection(False)
@@ -149,7 +151,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 603, 22))
+        self.menubar.setGeometry(QRect(0, 0, 636, 24))
         self.menuData = QMenu(self.menubar)
         self.menuData.setObjectName(u"menuData")
         self.menuText_to_speech = QMenu(self.menubar)
