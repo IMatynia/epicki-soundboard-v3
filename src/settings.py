@@ -17,7 +17,7 @@ class Settings:
         self._s_main_on = True
         self._s_singular = False
 
-        # Shortcuts:
+        # Shortcuts: TODO: change format
         self._s_toggle_main = "*|/"
         self._s_toggle_singular = "-|/"
         self._s_loud_up = "*|+"
