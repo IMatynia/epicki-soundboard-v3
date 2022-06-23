@@ -1,39 +1,104 @@
 from logging import info
-from time import sleep
+from time import sleep, time
 import keyboard
 from bitarray import bitarray
 
-_SCAN_HOOK_RUNNING = False
+
+class Key:
+    def __init__(self, name=None, scan_code=None) -> None:
+        self.name = name
+        self.scan_code = scan_code
+
+    def load_from_dict(self, dict):
+        self.name = dict["name"]
+        self.scan_code = dict["scan_code"]
+
+    def save_to_dict(self):
+        out = {
+            "name": self.name,
+            "scan_code": self.scan_code
+        }
+        return out
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.scan_code})"
+
+    def __hash__(self) -> int:
+        return hash(self.name) + hash(self.scan_code)
+
+    def __eq__(self, other) -> bool:
+        return other.name == self.name and other.scan_code == self.scan_code
+
+    def __gt__(self, other) -> bool:
+        return self.name > other.name
+
+
+def keys_to_string(key_set):
+    return " + ".join([key.name for key in sorted(list(key_set))])
+
+
+class HoldYourHorses:
+    def __init__(self, delay=10) -> None:
+        self._delay = delay
+        self._wait_until = [0] * 256
+
+    def try_pressing_again(self, scan_code):
+        now = time()
+        can_continue = False
+        if now > self._wait_until[scan_code]:
+            can_continue = True
+
+        self._wait_until[scan_code] = now + self._delay/1000
+        return can_continue
+
+
+class KeyScanner:
+    _scan_hook_running = False
+    _n_of_pressed_keys = 0
+    _all_keys = set()
+    _scan_hook = None
+    _awaiting = HoldYourHorses()
+
+    @staticmethod
+    def _press_callback(event):
+        new_key = Key(event.name, event.scan_code)
+        if event.event_type == "down" \
+                and new_key not in KeyScanner._all_keys \
+                and KeyScanner._awaiting.try_pressing_again(event.scan_code):
+            info(
+                f"DOWN {event.scan_code} | Currently pressed: {KeyScanner._n_of_pressed_keys}")
+            KeyScanner._n_of_pressed_keys += 1
+            KeyScanner._all_keys.add(new_key)
+        elif KeyScanner._awaiting.try_pressing_again(event.scan_code):
+            info(
+                f"UP {event.scan_code} | Currently pressed: {KeyScanner._n_of_pressed_keys}")
+            KeyScanner._n_of_pressed_keys -= 1
+
+        if KeyScanner._n_of_pressed_keys <= 0:  # User stopped pressing any buttons, scan complete
+            KeyScanner._scan_hook_running = False
+            keyboard.unhook(KeyScanner._scan_hook)
+        return
+
+    @staticmethod
+    def get_keys():
+        KeyScanner._scan_hook_running = True
+        KeyScanner._scan_hook = keyboard.hook(KeyScanner._press_callback, True)
+
+        timeout = 30
+        while KeyScanner._scan_hook_running and timeout > 0:
+            sleep(0.2)
+            timeout -= 0.2
+
+        if timeout <= 0:
+            raise Exception("Hotkey scanning timeout!")
+
+        detail = " ".join([str(key) for key in KeyScanner._all_keys])
+        info(f"Scanned keys: {detail}")
+        return KeyScanner._all_keys
 
 
 def scan_pressed_keys():
-    global _SCAN_HOOK_RUNNING
-    all_keys = set()
-
-    def press_callback(event):
-        global _SCAN_HOOK_RUNNING
-        if event.scan_code == 1:  # User pressed ESC
-            _SCAN_HOOK_RUNNING = False
-            keyboard.unhook(press_callback)
-            return
-        # Save the key name (can be converted into scan code)
-        all_keys.add(event.name)
-
-    _SCAN_HOOK_RUNNING = True
-    keyboard.hook(press_callback, True)
-
-    # Await completion
-    timeout = 30
-    while _SCAN_HOOK_RUNNING and timeout > 0:
-        sleep(0.2)
-        timeout -= 0.2
-
-    # Timeout
-    if timeout <= 0:
-        raise Exception("Hotkey scanning timeout!")
-
-    info("Key scanning complete!")
-    return all_keys
+    return KeyScanner.get_keys()
 
 
 class HotkeyCallback:
@@ -116,14 +181,13 @@ class HotkeyManager:
                 HotkeyManager._run_matching_hotkey()
         else:
             HotkeyManager._bitset[code] = False
-            info(f"{code} Released!")
 
     @staticmethod
     def _keys_to_bitset(keys):
         bitmask = bitarray(2**8)
         bitmask.setall(0)
         for key in keys:
-            bitmask[keyboard.key_to_scan_codes(key)[0]] = True
+            bitmask[key.scan_code] = True
         return bitmask
 
     @staticmethod

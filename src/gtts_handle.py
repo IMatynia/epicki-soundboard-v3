@@ -1,9 +1,9 @@
 from os import remove
 from src.ffmpeg_handle import ffmpeg_conversion
+from src.constants import TEMP_TTS_FILE
 import gtts
 
 _LANGUAGE_LIST = list(gtts.lang.tts_langs())
-TEMP_TTS_FILE = "temp.mp3"
 
 
 class InvalidLanguageError(Exception):
