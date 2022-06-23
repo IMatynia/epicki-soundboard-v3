@@ -1,5 +1,5 @@
 import json
-from src.audio_handle import MultiAudioPlayThread, stop_all_sounds
+from src.audio_handle import multi_audio_play_async, stop_all_sounds
 from ui.layouts.Ui_MainWindow import Ui_MainWindow
 from PySide2.QtWidgets import (
     QMainWindow, QTableWidgetItem, QMessageBox, QTableWidget
@@ -7,6 +7,7 @@ from PySide2.QtWidgets import (
 from logging import info
 from src.settings import Settings, CONFIG_FILENAME
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
+from src.keyboard_hotkeys import HotkeyManager, keys_to_string
 from ui.dialog_add_edit_file import AddEditFileDialog
 from ui.dialog_youtube import AddYoutubeDialog
 from src.utils import check_if_program_present_in_path
@@ -58,8 +59,7 @@ class MainWindow(QMainWindow):
     def on_hotkey_dobule_clicked(self, item: "HotkeyTableItemWidget"):
         filename = item.get_hotkey_ref().get_filename()
         try:
-            th = MultiAudioPlayThread(filename, self._settings)
-            th.start()
+            multi_audio_play_async(filename, self._settings)
         except FileNotFoundError:
             # TODO: handle this excpetion
             pass
@@ -75,13 +75,13 @@ class MainWindow(QMainWindow):
                 self._hotkeys.add_hotkey(new_hotkey)
         elif selected_type == "Youtube-dl":
             if check_if_program_present_in_path("ffmpeg") and check_if_program_present_in_path("youtube-dl"):
-                dialog = AddYoutubeDialog(self, self._hotkeys, self._current_page)
+                dialog = AddYoutubeDialog(
+                    self, self._hotkeys, self._current_page)
                 dialog.show()
 
                 if dialog.exec_():
                     new_hotkey = dialog.get_hotkey()
                     self._hotkeys.add_hotkey(new_hotkey)
-                pass
             else:
                 err_box = QMessageBox(self)
                 err_box.setText(
@@ -90,6 +90,7 @@ class MainWindow(QMainWindow):
         elif selected_type == "Current TTS":
             pass
         self.reload_table_contents()
+        self.reload_hotkey_hooks()
 
     def on_edit_hotkey(self):
         selected_item = self._ui.tvHotkeys.currentItem()
@@ -110,6 +111,7 @@ class MainWindow(QMainWindow):
             self._hotkeys.remove_hotkey(selection)
             self._hotkeys.add_hotkey(new_hotkey)
             self.reload_table_contents()
+            self.reload_hotkey_hooks()
 
     def on_remove_hotkey(self):
         hotkeys_to_remove = set()
@@ -119,6 +121,7 @@ class MainWindow(QMainWindow):
         for hotkey in hotkeys_to_remove:
             self._hotkeys.remove_hotkey(hotkey)
         self.reload_table_contents()
+        self.reload_hotkey_hooks()
 
     def on_play(self):
         files_to_play = set()
@@ -138,12 +141,14 @@ class MainWindow(QMainWindow):
             self._current_page -= 1
             self._ui.lbPage.setText(f"{self._current_page}")
             self.reload_table_contents()
+            self.reload_hotkey_hooks()
 
     def on_next_page(self):
         if self._current_page < self._hotkeys.get_max_pages()-1:
             self._current_page += 1
             self._ui.lbPage.setText(f"{self._current_page}")
             self.reload_table_contents()
+            self.reload_hotkey_hooks()
 
     def on_TTS_manager(self):
         # TODO: implement this dialog
@@ -158,7 +163,7 @@ class MainWindow(QMainWindow):
         self._ui.tvHotkeys.setRowCount(len(hotkey_page))
         for i, hotkey in enumerate(hotkey_page):
             filename = hotkey.get_filename()
-            keys_str = " + ".join(sorted(list(hotkey.get_keys())))
+            keys_str = keys_to_string(hotkey.get_keys())
             # The keys
             item_keys = HotkeyTableItemWidget(keys_str, hotkey)
             self._ui.tvHotkeys.setItem(i, 0, item_keys)
@@ -166,6 +171,13 @@ class MainWindow(QMainWindow):
             item_file = HotkeyTableItemWidget(filename, hotkey)
             self._ui.tvHotkeys.setItem(i, 1, item_file)
         self._ui.tvHotkeys.setSortingEnabled(True)
+
+    def reload_hotkey_hooks(self):
+        # Hotkeys in the database
+        for audio_hotkey in self._hotkeys.get_page(self._current_page):
+            HotkeyManager.add_hotkey(audio_hotkey.get_keys(),
+                                     multi_audio_play_async,
+                                     [audio_hotkey.get_filename(), self._settings])
 
     def save_config(self):
         """Saves current settings ang hotkeys into the config file
@@ -192,3 +204,4 @@ class MainWindow(QMainWindow):
         except json.JSONDecodeError:
             info("Config file invalid, using default settings")
         self.reload_table_contents()
+        self.reload_hotkey_hooks()
