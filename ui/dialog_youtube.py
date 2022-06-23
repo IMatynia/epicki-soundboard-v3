@@ -4,7 +4,7 @@ from ui.layouts.Ui_YoutubeDialog import Ui_AddYoutubeDL
 from PySide2.QtWidgets import (
     QDialog, QMessageBox
 )
-from src.hotkey import Hotkey
+from src.audio_hotkey import AudioHotkey
 import threading
 from src.hotkey_reader import scan_pressed_keys
 from src.youtube_dl_handle import download_media
@@ -17,7 +17,7 @@ class AddYoutubeDialog(QDialog):
         super().__init__(parent)
         self._ui = Ui_AddYoutubeDL()
         self._ui.setupUi(self)
-        self._hotkey = Hotkey(None, None, page)
+        self._hotkey = AudioHotkey(None, None, page)
         self._hotkey_list = hotkey_list
 
         self._ui.bScanKeys.clicked.connect(self.on_hotkey_scan_begin)

@@ -1,11 +1,11 @@
 from ui.dialog_add_edit_file import AddEditFileDialog
-from src.hotkey import Hotkey, HotkeyList
+from src.audio_hotkey import AudioHotkey, AudioHotkeyList
 from PySide2.QtWidgets import QApplication, QMainWindow
 
 
 def test_add_edit_with_initial_hk():
-    example = Hotkey(set(["a", "b", "shift"]), "bazinga.ogg", 1)
-    ex_list = HotkeyList()
+    example = AudioHotkey(set(["a", "b", "shift"]), "bazinga.ogg", 1)
+    ex_list = AudioHotkeyList()
 
     app = QApplication()
     main = QMainWindow(None)

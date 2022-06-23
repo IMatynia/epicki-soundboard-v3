@@ -1,13 +1,13 @@
 
 def make_hotkey_from_dict(dict):
-    return Hotkey(
+    return AudioHotkey(
         set(dict["keys"]),
         dict["filename"],
         dict["page"]
     )
 
 
-class Hotkey:
+class AudioHotkey:
     def __init__(self, keys=None, filename=None, page=None):
         """Creates an instance of soundboard hotkey
 
@@ -64,7 +64,7 @@ class HotkeyCollisionError(Exception):
             f"Hotkey [{hotkey}] collides with another one on the page")
 
 
-class HotkeyList:
+class AudioHotkeyList:
     def __init__(self, max_size=256) -> None:
         self._max_size = max_size
         self._pages = [list() for i in range(max_size)]

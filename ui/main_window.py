@@ -6,19 +6,19 @@ from PySide2.QtWidgets import (
 )
 from logging import info
 from src.settings import Settings, CONFIG_FILENAME
-from src.hotkey import HotkeyList, Hotkey
+from src.audio_hotkey import AudioHotkeyList, AudioHotkey
 from ui.dialog_add_edit_file import AddEditFileDialog
 from ui.dialog_youtube import AddYoutubeDialog
 from src.utils import check_if_program_present_in_path
 
 
 class HotkeyTableItemWidget(QTableWidgetItem):
-    def __init__(self, text, hotkey_ref: "Hotkey") -> None:
+    def __init__(self, text, hotkey_ref: "AudioHotkey") -> None:
         super().__init__()
         self._hotkey_ref = hotkey_ref
         self.setText(text)
 
-    def get_hotkey_ref(self) -> "Hotkey":
+    def get_hotkey_ref(self) -> "AudioHotkey":
         return self._hotkey_ref
 
 
@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         self._ui.setupUi(self)
 
         self._settings = Settings()
-        self._hotkeys = HotkeyList()
+        self._hotkeys = AudioHotkeyList()
         self._current_page = 0
 
         self.reload_config()

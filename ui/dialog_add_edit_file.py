@@ -2,7 +2,7 @@ from ui.layouts.Ui_AddEditFileDialog import Ui_AddEditFileDialog
 from PySide2.QtWidgets import (
     QDialog, QFileDialog, QMessageBox
 )
-from src.hotkey import Hotkey
+from src.audio_hotkey import AudioHotkey
 from src.hotkey_reader import scan_pressed_keys
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.utils import check_if_program_present_in_path
@@ -16,7 +16,7 @@ class AddEditFileDialog(QDialog):
         super().__init__(parent)
         self._ui = Ui_AddEditFileDialog()
         self._ui.setupUi(self)
-        self._hotkey = Hotkey(keys, file, page)
+        self._hotkey = AudioHotkey(keys, file, page)
         self._hotkey_list = hotkey_list
 
         if keys and file:
