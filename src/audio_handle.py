@@ -17,12 +17,12 @@ class InvalidDeviceIDError(Exception):
 
 
 class MultiAudioPlayThread(threading.Thread):
-    def __init__(self, filename, options: "Settings", args=(), kwargs=None):
+    def __init__(self, filename, settings: "Settings", args=(), kwargs=None):
         threading.Thread.__init__(self, args=(), kwargs=None)
         self.daemon = True
         self._stopped = False
         self._filename = filename
-        self._options = options
+        self._settings = settings
 
         if not path.exists(self._filename):
             raise FileNotFoundError()
@@ -33,7 +33,7 @@ class MultiAudioPlayThread(threading.Thread):
         with soundfile.SoundFile(self._filename) as sound_data:
             # Get the right device ID
             invalid_device = False
-            additiona_device_number = self._options.get_additional_device_num()
+            additiona_device_number = self._settings.get_additional_device_num()
             if additiona_device_number < 0 or additiona_device_number >= len(get_devices()):
                 info("Invalid device id, playing on default device!")
                 additiona_device_number = sounddevice.default.device
@@ -47,7 +47,7 @@ class MultiAudioPlayThread(threading.Thread):
                                                         channels=sound_data.channels,
                                                         device=additiona_device_number)
             info(
-                f"Now playing {self._filename} ({sound_data.frames/sound_data.samplerate : 0.2f} s) on device {self._options.get_additional_device()}")
+                f"Now playing {self._filename} ({sound_data.frames/sound_data.samplerate : 0.2f} s) on device {self._settings.get_additional_device()}")
 
             main_device.start()
             secondary_device.start()
@@ -55,7 +55,7 @@ class MultiAudioPlayThread(threading.Thread):
             for block in sound_data.blocks(blocksize=BLOCK_SIZE, dtype="float32"):
                 processed_block = self.audio_processor(block)
                 secondary_device.write(processed_block)
-                if self._options.get_play_on_main() and not invalid_device:
+                if self._settings.get_play_on_main() and not invalid_device:
                     main_device.write(processed_block)
 
                 if self._stopped:
@@ -74,7 +74,7 @@ class MultiAudioPlayThread(threading.Thread):
     def audio_processor(self, block_raw):
         block = np.empty_like(block_raw)
         block[:] = block_raw
-        block *= self._options.get_loudness()
+        block *= self._settings.get_loudness()
         return block
 
 
@@ -83,6 +83,11 @@ def stop_all_sounds():
     for thread in _ALL_AUDIO_THREADS:
         thread.stop_this()
     _ALL_AUDIO_THREADS = []
+
+
+def multi_audio_play_async(filename, settings):
+    th = MultiAudioPlayThread(filename, settings)
+    th.start()
 
 
 def get_device_number(device):
