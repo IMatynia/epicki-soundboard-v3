@@ -4,6 +4,7 @@ import soundfile
 import threading
 import numpy as np
 from logging import info
+from os import path
 
 _DEVICE_LIST = list(sounddevice.query_devices())
 _ALL_AUDIO_THREADS = []
@@ -22,6 +23,9 @@ class MultiAudioPlayThread(threading.Thread):
         self._stopped = False
         self._filename = filename
         self._options = options
+
+        if not path.exists(self._filename):
+            raise FileNotFoundError()
 
         _ALL_AUDIO_THREADS.append(self)
 
