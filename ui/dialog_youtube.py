@@ -6,7 +6,7 @@ from PySide2.QtWidgets import (
 )
 from src.audio_hotkey import AudioHotkey
 import threading
-from src.hotkey_reader import scan_pressed_keys
+from src.keyboard_hotkeys import keys_to_string, scan_pressed_keys
 from src.youtube_dl_handle import download_media
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_YTDL_FILE
@@ -84,7 +84,7 @@ class AddYoutubeDialog(QDialog):
         self.accept()
 
     def update_hotkey_display(self):
-        text = " + ".join(self._hotkey.get_keys())
+        text = keys_to_string(self._hotkey.get_keys())
         text = text if not text == "" else "Awaiting input"
         self._ui.lKeys.setText(text)
 

@@ -3,7 +3,7 @@ from PySide2.QtWidgets import (
     QDialog, QFileDialog, QMessageBox
 )
 from src.audio_hotkey import AudioHotkey
-from src.hotkey_reader import scan_pressed_keys
+from src.keyboard_hotkeys import keys_to_string, scan_pressed_keys
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.utils import check_if_program_present_in_path
 from os import path
@@ -96,7 +96,7 @@ class AddEditFileDialog(QDialog):
         self.setDisabled(False)
 
     def update_hotkey_display(self):
-        text = " + ".join(self._hotkey.get_keys())
+        text = keys_to_string(self._hotkey.get_keys())
         text = text if not text == "" else "Awaiting input"
         self._ui.lKeys.setText(text)
 
