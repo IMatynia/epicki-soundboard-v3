@@ -1,14 +1,15 @@
 import json
-from src.hotkey_reader import scan_pressed_keys
 from src.audio_handle import MultiAudioPlayThread, stop_all_sounds
 from ui.layouts.Ui_MainWindow import Ui_MainWindow
 from PySide2.QtWidgets import (
-    QMainWindow, QTableWidgetItem
+    QMainWindow, QTableWidgetItem, QMessageBox, QTableWidget
 )
 from logging import info
 from src.settings import Settings, CONFIG_FILENAME
 from src.hotkey import HotkeyList, Hotkey
 from ui.dialog_add_edit_file import AddEditFileDialog
+from ui.dialog_youtube import AddYoutubeDialog
+from src.utils import check_if_program_present_in_path
 
 
 class HotkeyTableItemWidget(QTableWidgetItem):
@@ -52,11 +53,16 @@ class MainWindow(QMainWindow):
 
         # Minor UI setup
         self._ui.lbPage.setText(f"{self._current_page}")
+        self._ui.tvHotkeys.sortItems(0)
 
     def on_hotkey_dobule_clicked(self, item: "HotkeyTableItemWidget"):
         filename = item.get_hotkey_ref().get_filename()
-        th = MultiAudioPlayThread(filename, self._settings)
-        th.start()
+        try:
+            th = MultiAudioPlayThread(filename, self._settings)
+            th.start()
+        except FileNotFoundError:
+            # TODO: handle this excpetion
+            pass
 
     def on_add_hotkey(self, selected_type):
         if selected_type == "Audio file":
@@ -68,7 +74,19 @@ class MainWindow(QMainWindow):
                 new_hotkey = dialog.get_hotkey()
                 self._hotkeys.add_hotkey(new_hotkey)
         elif selected_type == "Youtube-dl":
-            pass
+            if check_if_program_present_in_path("ffmpeg") and check_if_program_present_in_path("youtube-dl"):
+                dialog = AddYoutubeDialog(self, self._hotkeys, self._current_page)
+                dialog.show()
+
+                if dialog.exec_():
+                    new_hotkey = dialog.get_hotkey()
+                    self._hotkeys.add_hotkey(new_hotkey)
+                pass
+            else:
+                err_box = QMessageBox(self)
+                err_box.setText(
+                    "You need ffmpeg and youtube-dl in path to use this feature!")
+                err_box.show()
         elif selected_type == "Current TTS":
             pass
         self.reload_table_contents()
@@ -108,8 +126,12 @@ class MainWindow(QMainWindow):
             files_to_play.add(selection.get_hotkey_ref().get_filename())
 
         for file in files_to_play:
-            th = MultiAudioPlayThread(file, self._settings)
-            th.start()
+            try:
+                th = MultiAudioPlayThread(file, self._settings)
+                th.start()
+            except FileNotFoundError:
+                # TODO: handle this excpetion
+                pass
 
     def on_prev_page(self):
         if self._current_page > 0:
