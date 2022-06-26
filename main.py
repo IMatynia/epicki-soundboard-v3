@@ -3,6 +3,7 @@ import sys
 from PySide2.QtWidgets import QApplication
 from ui.main_window import MainWindow
 import os
+from src.keyboard_hotkeys import HotkeyListener
 from src.audio_handle import stop_all_sounds
 from src.constants import DEFAULT_CUSTOM_FOLDER
 
@@ -16,6 +17,7 @@ log.basicConfig(
 
 def setup():
     try:
+        HotkeyListener.init()
         os.mkdir(DEFAULT_CUSTOM_FOLDER)
     except FileExistsError:
         # good
