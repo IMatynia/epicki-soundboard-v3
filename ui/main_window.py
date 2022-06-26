@@ -1,15 +1,19 @@
 import json
+from os import path
 from src.audio_handle import multi_audio_play_async, stop_all_sounds
+from ui.utility_popup_box import MessageBoxesInterface
 from ui.layouts.Ui_MainWindow import Ui_MainWindow
-from PySide2.QtWidgets import (
-    QMainWindow, QTableWidgetItem, QMessageBox, QTableWidget
-)
-from logging import info
-from src.settings import Settings, CONFIG_FILENAME
-from src.audio_hotkey import AudioHotkeyList, AudioHotkey
-from src.keyboard_hotkeys import HotkeyManager, keys_to_string
 from ui.dialog_add_edit_file import AddEditFileDialog
 from ui.dialog_youtube import AddYoutubeDialog
+from ui.dialog_TTS import AddCurrentTTS
+from PySide2.QtWidgets import (
+    QMainWindow, QTableWidgetItem, QTableWidget
+)
+from logging import info
+from src.settings import Settings
+from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME
+from src.audio_hotkey import AudioHotkeyList, AudioHotkey
+from src.keyboard_hotkeys import HotkeyListener, keys_to_string
 from src.utils import check_if_program_present_in_path
 
 
@@ -23,10 +27,11 @@ class HotkeyTableItemWidget(QTableWidgetItem):
         return self._hotkey_ref
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, MessageBoxesInterface):
     def __init__(self, app, parent=None):
         # UI setup
-        super().__init__(parent)
+        QMainWindow.__init__(self, parent)
+        MessageBoxesInterface.__init__(self)
         self._app = app
         self._ui = Ui_MainWindow()
         self._ui.setupUi(self)
@@ -83,12 +88,19 @@ class MainWindow(QMainWindow):
                     new_hotkey = dialog.get_hotkey()
                     self._hotkeys.add_hotkey(new_hotkey)
             else:
-                err_box = QMessageBox(self)
-                err_box.setText(
+                self.show_popup(
                     "You need ffmpeg and youtube-dl in path to use this feature!")
-                err_box.show()
         elif selected_type == "Current TTS":
-            pass
+            if path.exists(TEMP_TTS_FILE):
+                dialog = AddCurrentTTS(self, self._hotkeys, self._current_page)
+                dialog.show()
+
+                if dialog.exec_():
+                    new_hotkey = dialog.get_hotkey()
+                    self._hotkeys.add_hotkey(new_hotkey)
+            else:
+                self.show_popup(
+                    "No temporary TTS file found. Did you forget to generate it?")
         self.reload_table_contents()
         self.reload_hotkey_hooks()
 
@@ -174,10 +186,14 @@ class MainWindow(QMainWindow):
 
     def reload_hotkey_hooks(self):
         # Hotkeys in the database
+        info("Reloading all hotkeys")
+        HotkeyListener.remove_all()
         for audio_hotkey in self._hotkeys.get_page(self._current_page):
-            HotkeyManager.add_hotkey(audio_hotkey.get_keys(),
-                                     multi_audio_play_async,
-                                     [audio_hotkey.get_filename(), self._settings])
+            HotkeyListener.add_hotkey(audio_hotkey.get_keys(),
+                                      multi_audio_play_async,
+                                      [audio_hotkey.get_filename(), self._settings])
+
+        # QOL shortkeys
 
     def save_config(self):
         """Saves current settings ang hotkeys into the config file

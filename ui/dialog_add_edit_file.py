@@ -1,9 +1,10 @@
 from ui.layouts.Ui_AddEditFileDialog import Ui_AddEditFileDialog
+from ui.utility_popup_box import MessageBoxesInterface
 from PySide2.QtWidgets import (
-    QDialog, QFileDialog, QMessageBox
+    QDialog, QFileDialog
 )
 from src.audio_hotkey import AudioHotkey
-from src.keyboard_hotkeys import keys_to_string, scan_pressed_keys
+from src.keyboard_hotkeys import keys_to_string, HotkeyScanner
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.utils import check_if_program_present_in_path
 from os import path
@@ -11,9 +12,10 @@ import threading
 from logging import info
 
 
-class AddEditFileDialog(QDialog):
+class AddEditFileDialog(QDialog, MessageBoxesInterface):
     def __init__(self, parent, hotkey_list, page, keys=None, file=None) -> None:
-        super().__init__(parent)
+        QDialog.__init__(self, parent)
+        MessageBoxesInterface.__init__(self)
         self._ui = Ui_AddEditFileDialog()
         self._ui.setupUi(self)
         self._hotkey = AudioHotkey(keys, file, page)
@@ -56,31 +58,25 @@ class AddEditFileDialog(QDialog):
         filename = self._ui.leFilePath.text()
         self._hotkey.set_filename(filename)
 
-        err_box = QMessageBox(self)
         self.setDisabled(True)
-        err_box.setDisabled(False)
         if not path.exists(filename):
             # File does not exist
-            err_box.setText("Invalid file!")
-            err_box.show()
+            self.show_popup("Invalid file!")
         elif self._hotkey.get_keys() is None or len(self._hotkey.get_keys()) == 0:
             # No keys
-            err_box.setText(
-                "Keys cant be empty!")
-            err_box.show()
+            self.show_popup("Keys cant be empty!")
         elif self._hotkey_list.check_collision(self._hotkey):
             # Collision
-            err_box.setText(
+            self.show_popup(
                 "This hotkey colides with another one on this page!")
-            err_box.show()
         elif filename.split(".")[-1] not in set(["ogg", "wav"]):
             # Invalid data type
             if check_if_program_present_in_path("ffmpeg"):
                 # Try to use ffmpeg
-                err_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-                err_box.setText(
+
+                choice = self.show_choice(
                     "Do you want to automatically convert this media into OGG using ffmpeg? (Create a copy in OGG format)")
-                if err_box.exec() == QMessageBox.Ok:
+                if choice:
                     # Convert the media into ogg (or at least try, let ffmpeg handle it)
                     ogg_filename = ".".join(filename.split(".")[0:-1]) + ".ogg"
                     info(f"Converting {filename} to {ogg_filename}")
@@ -89,7 +85,7 @@ class AddEditFileDialog(QDialog):
                     self.accept()
             else:
                 # No ffmpeg available
-                err_box.setText(
+                self.show_popup(
                     "This file format is not supported. Add FFMPEG to PATH to automatically convert")
         else:
             self.accept()
@@ -108,6 +104,6 @@ class AddEditFileDialog(QDialog):
         return self._hotkey
 
     def scan_and_put_in_shortcut(self):
-        scanned_keys = scan_pressed_keys()
+        scanned_keys = HotkeyScanner.scan_keys_until_release_all()
         self._hotkey.set_keys(scanned_keys)
         self.on_hotkey_scan_complete()

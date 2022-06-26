@@ -1,20 +1,22 @@
 from os import remove
 import re
 from ui.layouts.Ui_YoutubeDialog import Ui_AddYoutubeDL
+from ui.utility_popup_box import MessageBoxesInterface
 from PySide2.QtWidgets import (
-    QDialog, QMessageBox
+    QDialog
 )
 from src.audio_hotkey import AudioHotkey
 import threading
-from src.keyboard_hotkeys import keys_to_string, scan_pressed_keys
+from src.keyboard_hotkeys import keys_to_string, HotkeyScanner
 from src.youtube_dl_handle import download_media
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_YTDL_FILE
 
 
-class AddYoutubeDialog(QDialog):
+class AddYoutubeDialog(QDialog, MessageBoxesInterface):
     def __init__(self, parent, hotkey_list, page) -> None:
-        super().__init__(parent)
+        QDialog.__init__(self, parent)
+        MessageBoxesInterface.__init__(self)
         self._ui = Ui_AddYoutubeDL()
         self._ui.setupUi(self)
         self._hotkey = AudioHotkey(None, None, page)
@@ -42,28 +44,25 @@ class AddYoutubeDialog(QDialog):
         filename = f"{DEFAULT_CUSTOM_FOLDER}/{custom_name}.ogg"
         self._hotkey.set_filename(filename)
 
-        err_box = QMessageBox(self)
         if self._hotkey.get_keys() is None or len(self._hotkey.get_keys()) == 0:
             # No keys
-            err_box.setText(
-                "Keys cant be empty!")
-            err_box.show()
+            self.show_popup("Keys cant be empty!")
+
         elif self._hotkey_list.check_collision(self._hotkey):
             # Collision
-            err_box.setText(
+            self.show_popup(
                 "This hotkey colides with another one on this page!")
-            err_box.show()
         else:
             self.setDisabled(True)
             th = threading.Thread(
-                target=self.get_media_async, args=[url, filename])
+                target=self.get_media_async_with_updates, args=[url, filename])
             th.start()
 
     def set_status(self, prompt, percentage):
         self._ui.lStatus.setText(prompt)
         self._ui.progressBar.setValue(percentage)
 
-    def get_media_async(self, url, destination):
+    def get_media_async_with_updates(self, url, destination):
         self.set_status("Starting download", 0)
 
         def callback(line):
@@ -92,6 +91,6 @@ class AddYoutubeDialog(QDialog):
         return self._hotkey
 
     def scan_and_put_in_shortcut(self):
-        scanned_keys = scan_pressed_keys()
+        scanned_keys = HotkeyScanner.scan_keys_until_release_all()
         self._hotkey.set_keys(scanned_keys)
         self.on_hotkey_scan_complete()
