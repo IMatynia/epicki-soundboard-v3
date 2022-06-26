@@ -1,5 +1,4 @@
 SETTINGS_VERSION = "V1.0"
-CONFIG_FILENAME = "config.json"
 
 
 class MissingConfigFieldError(Exception):
