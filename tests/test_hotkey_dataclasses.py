@@ -3,6 +3,13 @@ from src.keyboard_hotkeys import Key
 import pytest
 
 
+def test_key_class():
+    k = Key("a", 1)
+    assert k.name == "a"
+    assert k.scan_code == 1
+    assert str(k) == "a (1)"
+
+
 def test_simple_hotkey():
     keys = set([
         Key("a", 1),
@@ -93,3 +100,15 @@ def test_save_load_purge_list():
     page_0 = hkl.get_page(0)
     assert page_0 == [AudioHotkey(
         set([Key("*", 1), Key("1", 2)]), "sogga.ogg", 0)]
+
+
+def test_hash_audio_hotkey():
+    key1 = Key("a", 1)
+    key2 = Key("b", 2)
+    key3 = Key("c", 3)
+    a = AudioHotkey({key1, key2}, "bingus.ogg", 0)
+    b = AudioHotkey({key3, key2}, "spoingus.ogg", 1)
+
+    s = {a, b}
+    assert a in s
+    assert b in s
