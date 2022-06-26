@@ -38,7 +38,9 @@ class AudioHotkey:
         self._page = page
 
     def __hash__(self) -> int:
-        return hash(self._page) + hash("".join(sorted(list(self._keys))))
+        keys_sorted = sorted(list(self._keys))
+        keys_merged = "".join(map(str, keys_sorted))
+        return hash((self._page, keys_merged))
 
     def __eq__(self, other):
         # There can only be one hotkey with given keys per page
