@@ -3,7 +3,7 @@ from bitarray import bitarray
 
 
 class KeyboardHotkeyCallback:
-    def __init__(self, keys, callback, args) -> None:
+    def __init__(self, keys, callback, args=None) -> None:
         """Data class storing information about a hotkey combination
 
         Args:
@@ -13,7 +13,7 @@ class KeyboardHotkeyCallback:
         """
         self.key_bitmap = KeyboardHotkeyCallback.keys_to_bitset(keys)
         self.callback = callback
-        self.args = args
+        self.args = args if args else []
 
     def run(self):
         self.callback(*self.args)
@@ -55,7 +55,7 @@ class HotkeyListener:
         HotkeyListener._enabled = True
 
     @staticmethod
-    def add_hotkey(keys, callback, args):
+    def add_hotkey(keys, callback, args=None):
         """Adds the hotkey to the listener
 
         Args:
