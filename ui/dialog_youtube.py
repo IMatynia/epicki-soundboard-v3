@@ -2,13 +2,12 @@ from os import remove
 import re
 from ui.layouts.Ui_YoutubeDialog import Ui_AddYoutubeDL
 from ui.utility_popup_box import MessageBoxesInterface
+from ui.hotkey_scan_button import HotkeyScanPushButton
 from PySide2.QtWidgets import (
     QDialog
 )
 from src.audio_hotkey import AudioHotkey
 import threading
-from src.key import keys_to_string
-from src.hotkey_scanner import HotkeyScanner
 from src.youtube_dl_handle import download_media
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_YTDL_FILE
@@ -23,20 +22,11 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
         self._hotkey = AudioHotkey(None, None, page)
         self._hotkey_list = hotkey_list
 
-        self._ui.bScanKeys.clicked.connect(self.on_hotkey_scan_begin)
+        # Set up triggers
+        self._scan_button = HotkeyScanPushButton(self)
+        self._ui.buttonPlaceholder.addWidget(self._scan_button)
         self._ui.bSave.clicked.connect(self.on_save_begin)
         self._ui.bCancel.clicked.connect(self.reject)
-
-    def on_hotkey_scan_begin(self):
-        self._ui.bScanKeys.setText("Press ESC to stop")
-        self.setDisabled(True)
-        t_scan = threading.Thread(target=self.scan_and_put_in_shortcut)
-        t_scan.start()
-
-    def on_hotkey_scan_complete(self):
-        self.setDisabled(False)
-        self._ui.bScanKeys.setText("Try again")
-        self.update_hotkey_display()
 
     def on_save_begin(self):
         custom_name = self._ui.leName.text()
@@ -44,6 +34,7 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
 
         filename = f"{DEFAULT_CUSTOM_FOLDER}/{custom_name}.ogg"
         self._hotkey.set_filename(filename)
+        self._hotkey.set_keys(self._scan_button.get_keys())
 
         if self._hotkey.get_keys() is None or len(self._hotkey.get_keys()) == 0:
             # No keys
@@ -83,15 +74,5 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
     def on_save_complete(self):
         self.accept()
 
-    def update_hotkey_display(self):
-        text = keys_to_string(self._hotkey.get_keys())
-        text = text if not text == "" else "Awaiting input"
-        self._ui.lKeys.setText(text)
-
     def get_hotkey(self):
         return self._hotkey
-
-    def scan_and_put_in_shortcut(self):
-        scanned_keys = HotkeyScanner.scan_keys_until_release_all()
-        self._hotkey.set_keys(scanned_keys)
-        self.on_hotkey_scan_complete()

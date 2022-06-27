@@ -1,11 +1,11 @@
 from ui.layouts.Ui_AddEditFileDialog import Ui_AddEditFileDialog
+from ui.hotkey_scan_button import HotkeyScanPushButton
 from ui.utility_popup_box import MessageBoxesInterface
 from PySide2.QtWidgets import (
     QDialog, QFileDialog
 )
 from src.audio_hotkey import AudioHotkey
 from src.key import keys_to_string
-from src.hotkey_scanner import HotkeyScanner
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.utils import check_if_program_present_in_path
 from os import path
@@ -22,12 +22,12 @@ class AddEditFileDialog(QDialog, MessageBoxesInterface):
         self._hotkey = AudioHotkey(keys, file, page)
         self._hotkey_list = hotkey_list
 
-        if keys and file:
-            self.update_hotkey_display()
+        if file:
             self.update_file_display()
 
         # Set up triggers
-        self._ui.bScanKeys.clicked.connect(self.on_hotkey_scan_begin)
+        self._scan_button = HotkeyScanPushButton(self, keys)
+        self._ui.buttonPlaceholder.addWidget(self._scan_button)
         self._ui.bChooseFile.clicked.connect(self.on_file_select)
         self._ui.bSave.clicked.connect(self.on_save)
         self._ui.bCancel.clicked.connect(self.reject)
@@ -44,20 +44,10 @@ class AddEditFileDialog(QDialog, MessageBoxesInterface):
             self._hotkey.set_filename(file)
             self.update_file_display()
 
-    def on_hotkey_scan_begin(self):
-        self._ui.bScanKeys.setText("Press ESC to stop")
-        self.setDisabled(True)
-        t_scan = threading.Thread(target=self.scan_and_put_in_shortcut)
-        t_scan.start()
-
-    def on_hotkey_scan_complete(self):
-        self.setDisabled(False)
-        self._ui.bScanKeys.setText("Try again")
-        self.update_hotkey_display()
-
     def on_save(self):
         filename = self._ui.leFilePath.text()
         self._hotkey.set_filename(filename)
+        self._hotkey.set_keys(self._scan_button.get_keys())
 
         self.setDisabled(True)
         if not path.exists(filename):
@@ -92,19 +82,9 @@ class AddEditFileDialog(QDialog, MessageBoxesInterface):
             self.accept()
         self.setDisabled(False)
 
-    def update_hotkey_display(self):
-        text = keys_to_string(self._hotkey.get_keys())
-        text = text if not text == "" else "Awaiting input"
-        self._ui.lKeys.setText(text)
-
     def update_file_display(self):
         text = self._hotkey.get_filename()
         self._ui.leFilePath.setText(text)
 
     def get_hotkey(self):
         return self._hotkey
-
-    def scan_and_put_in_shortcut(self):
-        scanned_keys = HotkeyScanner.scan_keys_until_release_all()
-        self._hotkey.set_keys(scanned_keys)
-        self.on_hotkey_scan_complete()
