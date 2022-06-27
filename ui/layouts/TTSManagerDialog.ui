@@ -15,33 +15,30 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Language</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QComboBox" name="cbLanguage">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Text, that will be changed to speech</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cbLanguage">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QTextEdit" name="teText">
      <property name="placeholderText">
-      <string>Lorem ipsum dolor sit amet</string>
+      <string>Type text you want me to say</string>
      </property>
     </widget>
    </item>
@@ -63,10 +60,10 @@
      <item>
       <widget class="QPushButton" name="bTranslate">
        <property name="statusTip">
-        <string>Translates the english text into desired language</string>
+        <string>This is so OP</string>
        </property>
        <property name="text">
-        <string>Translate from EN</string>
+        <string>Auto translate with Google</string>
        </property>
       </widget>
      </item>

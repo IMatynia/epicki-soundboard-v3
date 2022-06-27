@@ -20,10 +20,12 @@ class Ui_TTSManagerDialog(object):
         TTSManagerDialog.resize(500, 330)
         self.verticalLayout = QVBoxLayout(TTSManagerDialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.label = QLabel(TTSManagerDialog)
         self.label.setObjectName(u"label")
 
-        self.verticalLayout.addWidget(self.label)
+        self.horizontalLayout_2.addWidget(self.label)
 
         self.cbLanguage = QComboBox(TTSManagerDialog)
         self.cbLanguage.setObjectName(u"cbLanguage")
@@ -33,12 +35,10 @@ class Ui_TTSManagerDialog(object):
         sizePolicy.setHeightForWidth(self.cbLanguage.sizePolicy().hasHeightForWidth())
         self.cbLanguage.setSizePolicy(sizePolicy)
 
-        self.verticalLayout.addWidget(self.cbLanguage)
+        self.horizontalLayout_2.addWidget(self.cbLanguage)
 
-        self.label_2 = QLabel(TTSManagerDialog)
-        self.label_2.setObjectName(u"label_2")
 
-        self.verticalLayout.addWidget(self.label_2)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.teText = QTextEdit(TTSManagerDialog)
         self.teText.setObjectName(u"teText")
@@ -81,12 +81,11 @@ class Ui_TTSManagerDialog(object):
     def retranslateUi(self, TTSManagerDialog):
         TTSManagerDialog.setWindowTitle(QCoreApplication.translate("TTSManagerDialog", u"TTS Manager", None))
         self.label.setText(QCoreApplication.translate("TTSManagerDialog", u"Language", None))
-        self.label_2.setText(QCoreApplication.translate("TTSManagerDialog", u"Text, that will be changed to speech", None))
-        self.teText.setPlaceholderText(QCoreApplication.translate("TTSManagerDialog", u"Lorem ipsum dolor sit amet", None))
+        self.teText.setPlaceholderText(QCoreApplication.translate("TTSManagerDialog", u"Type text you want me to say", None))
 #if QT_CONFIG(statustip)
-        self.bTranslate.setStatusTip(QCoreApplication.translate("TTSManagerDialog", u"Translates the english text into desired language", None))
+        self.bTranslate.setStatusTip(QCoreApplication.translate("TTSManagerDialog", u"This is so OP", None))
 #endif // QT_CONFIG(statustip)
-        self.bTranslate.setText(QCoreApplication.translate("TTSManagerDialog", u"Translate from EN", None))
+        self.bTranslate.setText(QCoreApplication.translate("TTSManagerDialog", u"Auto translate with Google", None))
         self.bGenerate.setText(QCoreApplication.translate("TTSManagerDialog", u"Generate", None))
         self.bCancel.setText(QCoreApplication.translate("TTSManagerDialog", u"Cancel", None))
     # retranslateUi

@@ -277,7 +277,6 @@
     <addaction name="actionReload"/>
     <addaction name="separator"/>
     <addaction name="actionEdit_settings"/>
-    <addaction name="actionOpen_settings_directory"/>
    </widget>
    <widget class="QMenu" name="menuText_to_speech">
     <property name="title">

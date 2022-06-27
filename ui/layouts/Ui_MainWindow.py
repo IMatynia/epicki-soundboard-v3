@@ -173,7 +173,6 @@ class Ui_MainWindow(object):
         self.menuData.addAction(self.actionReload)
         self.menuData.addSeparator()
         self.menuData.addAction(self.actionEdit_settings)
-        self.menuData.addAction(self.actionOpen_settings_directory)
         self.menuText_to_speech.addAction(self.actionOpen_tts_manager)
         self.menuText_to_speech.addAction(self.actionPlay_current_file)
 
