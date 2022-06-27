@@ -59,6 +59,7 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         self._ui.actionEdit_settings.triggered.connect(self.on_edit_settings)
         self._ui.actionSave.triggered.connect(self.save_config)
         self._ui.actionReload.triggered.connect(self.reload_config)
+        self._ui.actionOpen_tts_manager.triggered.connect(self.on_TTS_manager)
 
         # Minor UI setup
         self._ui.lbPage.setText(f"{self._current_page}")
@@ -169,6 +170,9 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         dialog = EditSettingsDialog(self, self._settings)
         dialog.show()
 
+        if dialog.exec_():
+            self.reload_hotkey_hooks()
+
     def on_TTS_manager(self):
         # TODO: implement this dialog
         pass
@@ -203,9 +207,26 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         # QOL shortkeys
         HotkeyListener.add_hotkey(
             self._settings.get_keys_silence(),
-            print_detail_about_present_device,
-            [self._settings]
+            stop_all_sounds
         )
+
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_toggle_main(),
+            self._settings.toggle_play_on_main
+        )
+
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_toggle_singular(),
+            self._settings.toggle_singular_audio
+        )
+
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_tts_play(),
+            multi_audio_play_async,
+            [TEMP_TTS_FILE, self._settings]
+        )
+
+        # TODO: the rest of them
 
     def save_config(self):
         """Saves current settings ang hotkeys into the config file
