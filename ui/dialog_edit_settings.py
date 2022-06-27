@@ -46,6 +46,16 @@ class EditSettingsDialog(QDialog, MessageBoxesInterface):
             self._settings.get_additional_device())
         self._ui.cbDeviceSelector.setCurrentIndex(current_selection)
 
+        # Fill the form with remainig data
+        self._ui.cPlayOnMain.setChecked(self._settings.get_play_on_main())
+        self._ui.cPlaySingle.setChecked(self._settings.get_is_singular())
+
+        self._ui.sbHorizontalWin.setValue(self._settings.get_window_h_pos())
+        self._ui.sbVerticalWin.setValue(self._settings.get_window_v_pos())
+
+        horizontal, vertical = self.parent().pos().toTuple()
+        self._ui.lWindowPos.setText(f"{horizontal} x {vertical}")
+
     def _set_up_hotkey_buttons(self):
         row = 1
         # Toggle main
@@ -92,6 +102,39 @@ class EditSettingsDialog(QDialog, MessageBoxesInterface):
         ))
         row += 1
 
+        # Silence
+        self._hk_scan_elements.append(HotkeyScanUIElement(
+            self,
+            self._ui.glHotkeys,
+            row,
+            "Stop all sounds",
+            self._settings.set_keys_silence,
+            self._settings.get_keys_silence
+        ))
+        row += 1
+
+        # Play TTS
+        self._hk_scan_elements.append(HotkeyScanUIElement(
+            self,
+            self._ui.glHotkeys,
+            row,
+            "Play current TTS recording",
+            self._settings.set_keys_tts_play,
+            self._settings.get_keys_tts_play
+        ))
+        row += 1
+
+        # Open TTS
+        self._hk_scan_elements.append(HotkeyScanUIElement(
+            self,
+            self._ui.glHotkeys,
+            row,
+            "Open TTS manager",
+            self._settings.set_keys_tts_open_manager,
+            self._settings.get_keys_tts_open_manager
+        ))
+        row += 1
+
     def on_save(self):
         # Apply device
         selected_device_name, selected_device_id = self._ui.cbDeviceSelector.currentData()
@@ -102,6 +145,13 @@ class EditSettingsDialog(QDialog, MessageBoxesInterface):
         for hotkey_element in self._hk_scan_elements:
             hotkey_element.apply_hotkey()
         self.accept()
+
+        # Apply remaining data
+        self._settings.set_play_on_main(self._ui.cPlayOnMain.isChecked())
+        self._settings.set_singular_audio(self._ui.cPlaySingle.isChecked())
+
+        self._settings.set_window_h_pos(self._ui.sbHorizontalWin.value())
+        self._settings.set_window_v_pos(self._ui.sbVerticalWin.value())
 
     def on_cancel(self):
         self.reject()
