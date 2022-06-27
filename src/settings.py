@@ -1,3 +1,4 @@
+from logging import info
 from src.key import Key
 
 SETTINGS_VERSION = "V1.0"
@@ -28,7 +29,7 @@ class Settings:
         self._s_tts_open_manager = {Key("]", 221)}
 
         # Not saved:
-        self._loudness_multiplier = 1.0
+        self._volume_multiplier = 1.0
         self._current_page = 0
 
     def load_from_dict(self, dict_data):
@@ -128,11 +129,12 @@ class Settings:
     def toggle_singular_audio(self):
         self._s_singular ^= 1
 
-    def get_loudness(self):
-        return self._loudness_multiplier
+    def get_volume_multiplier(self):
+        return self._volume_multiplier
 
-    def modify_loudness(self, multiplier):
-        self._loudness_multiplier *= multiplier
+    def modify_volume_multiplier(self, multiplier):
+        self._volume_multiplier *= multiplier
+        info(f"Volume multiplier changed to {self._volume_multiplier}")
 
     # :/ not fun
     def get_keys_toggle_main(self):

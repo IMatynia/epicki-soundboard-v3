@@ -74,7 +74,7 @@ class MultiAudioPlayThread(threading.Thread):
     def audio_processor(self, block_raw):
         block = np.empty_like(block_raw)
         block[:] = block_raw
-        block *= self._settings.get_loudness()
+        block *= self._settings.get_volume_multiplier()
         return block
 
 
