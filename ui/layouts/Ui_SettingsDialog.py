@@ -141,15 +141,15 @@ class Ui_SettingsDialog(object):
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
-        self.pushButton_2 = QPushButton(SettingsDialog)
-        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.bSave = QPushButton(SettingsDialog)
+        self.bSave.setObjectName(u"bSave")
 
-        self.horizontalLayout_2.addWidget(self.pushButton_2)
+        self.horizontalLayout_2.addWidget(self.bSave)
 
-        self.pushButton = QPushButton(SettingsDialog)
-        self.pushButton.setObjectName(u"pushButton")
+        self.bCancel = QPushButton(SettingsDialog)
+        self.bCancel.setObjectName(u"bCancel")
 
-        self.horizontalLayout_2.addWidget(self.pushButton)
+        self.horizontalLayout_2.addWidget(self.bCancel)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
@@ -157,7 +157,7 @@ class Ui_SettingsDialog(object):
 
         self.retranslateUi(SettingsDialog)
 
-        self.pushButton_2.setDefault(True)
+        self.bSave.setDefault(True)
 
 
         QMetaObject.connectSlotsByName(SettingsDialog)
@@ -180,7 +180,7 @@ class Ui_SettingsDialog(object):
         self.lWindowPos.setText(QCoreApplication.translate("SettingsDialog", u"[POSITION]", None))
         self.label_7.setText(QCoreApplication.translate("SettingsDialog", u"Vertical window pos", None))
         self.label_8.setText(QCoreApplication.translate("SettingsDialog", u"Horizontal window pos", None))
-        self.pushButton_2.setText(QCoreApplication.translate("SettingsDialog", u"Save", None))
-        self.pushButton.setText(QCoreApplication.translate("SettingsDialog", u"Cancel", None))
+        self.bSave.setText(QCoreApplication.translate("SettingsDialog", u"Save", None))
+        self.bCancel.setText(QCoreApplication.translate("SettingsDialog", u"Cancel", None))
     # retranslateUi
 
