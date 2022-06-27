@@ -4,11 +4,11 @@ from src.audio_handle import multi_audio_play_async, stop_all_sounds
 from ui.utility_popup_box import MessageBoxesInterface
 from ui.layouts.Ui_MainWindow import Ui_MainWindow
 from ui.dialog_add_edit_file import AddEditFileDialog
-from ui.dialog_youtube import AddYoutubeDialog
+from ui.dialog_add_ytdl import AddYoutubeDialog
 from ui.dialog_add_current_TTS import AddCurrentTTSDialog
 from ui.dialog_edit_settings import EditSettingsDialog
 from PySide2.QtWidgets import (
-    QMainWindow, QTableWidgetItem, QTableWidget
+    QMainWindow, QTableWidgetItem
 )
 from logging import info
 from src.settings import Settings
@@ -16,7 +16,7 @@ from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
 from src.key import keys_to_string
 from src.hotkey_listener import HotkeyListener
-from src.utils import check_if_program_present_in_path, print_detail_about_present_device
+from src.utils import check_if_program_present_in_path
 
 
 class HotkeyTableItemWidget(QTableWidgetItem):

@@ -1,5 +1,5 @@
 from shutil import copyfile
-from ui.layouts.Ui_TTSDialog import Ui_AddFromTTS
+from ui.layouts.Ui_AddTTSDialog import Ui_AddFromTTS
 from ui.hotkey_scan_button import HotkeyScanPushButton
 from ui.utility_popup_box import MessageBoxesInterface
 from PySide2.QtWidgets import (

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>TTSManagerDialog</class>
+ <widget class="QDialog" name="TTSManagerDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Configure TTS</string>
+   <string>TTS Manager</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -71,9 +71,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="bSave">
+      <widget class="QPushButton" name="bGenerate">
        <property name="text">
-        <string>Save</string>
+        <string>Generate</string>
        </property>
        <property name="default">
         <bool>true</bool>

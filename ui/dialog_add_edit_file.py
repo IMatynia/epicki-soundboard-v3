@@ -5,11 +5,9 @@ from PySide2.QtWidgets import (
     QDialog, QFileDialog
 )
 from src.audio_hotkey import AudioHotkey
-from src.key import keys_to_string
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.utils import check_if_program_present_in_path
 from os import path
-import threading
 from logging import info
 
 
