@@ -6,13 +6,14 @@ from ui.layouts.Ui_MainWindow import Ui_MainWindow
 from ui.dialog_add_edit_file import AddEditFileDialog
 from ui.dialog_add_ytdl import AddYoutubeDialog
 from ui.dialog_add_current_TTS import AddCurrentTTSDialog
+from ui.dialog_edit_TTS import TTSManagerDialog
 from ui.dialog_edit_settings import EditSettingsDialog
 from PySide2.QtWidgets import (
     QMainWindow, QTableWidgetItem
 )
 from logging import info
 from src.settings import Settings
-from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME
+from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME, DEFAULT_SOUND_MULTIPLIER
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
 from src.key import keys_to_string
 from src.hotkey_listener import HotkeyListener
@@ -60,6 +61,8 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         self._ui.actionSave.triggered.connect(self.save_config)
         self._ui.actionReload.triggered.connect(self.reload_config)
         self._ui.actionOpen_tts_manager.triggered.connect(self.on_TTS_manager)
+        self._ui.actionPlay_current_file.triggered.connect(
+            self.play_temporary_tts)
 
         # Minor UI setup
         self._ui.lbPage.setText(f"{self._current_page}")
@@ -154,6 +157,9 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
                 # TODO: handle this excpetion
                 pass
 
+    def play_temporary_tts(self):
+        multi_audio_play_async(TEMP_TTS_FILE, self._settings)
+
     def on_prev_page(self):
         if self._current_page > 0:
             self._current_page -= 1
@@ -176,8 +182,9 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             self.reload_hotkey_hooks()
 
     def on_TTS_manager(self):
-        # TODO: implement this dialog
-        pass
+        dialog = TTSManagerDialog(self, self._settings)
+        dialog.show()
+        dialog.exec_()
 
     def reload_table_contents(self):
         """Reloads all items in the table
@@ -207,28 +214,52 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
                                       [audio_hotkey.get_filename(), self._settings])
 
         # QOL shortkeys
+
+        # Stop sounds
         HotkeyListener.add_hotkey(
             self._settings.get_keys_silence(),
             stop_all_sounds
         )
 
+        # Toggle play on main
         HotkeyListener.add_hotkey(
             self._settings.get_keys_toggle_main(),
             self._settings.toggle_play_on_main
         )
 
+        # Toggle singular
         HotkeyListener.add_hotkey(
             self._settings.get_keys_toggle_singular(),
             self._settings.toggle_singular_audio
         )
 
+        # Play tts
         HotkeyListener.add_hotkey(
             self._settings.get_keys_tts_play(),
-            multi_audio_play_async,
-            [TEMP_TTS_FILE, self._settings]
+            self.play_temporary_tts
         )
 
-        # TODO: the rest of them
+        # Open tts manager
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_tts_open_manager(),
+            self.on_TTS_manager
+        )
+
+        # Increase volume
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_loud_up(),
+            self._settings.modify_volume_multiplier,
+            [DEFAULT_SOUND_MULTIPLIER]
+        )
+
+        # Decrease volume
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_loud_down(),
+            self._settings.modify_volume_multiplier,
+            [1/DEFAULT_SOUND_MULTIPLIER]
+        )
+
+
 
     def save_config(self):
         """Saves current settings ang hotkeys into the config file
