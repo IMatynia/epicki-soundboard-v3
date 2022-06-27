@@ -1,15 +1,21 @@
 from PySide2.QtWidgets import (
-    QPushButton
+    QPushButton, QSizePolicy
 )
 from src.hotkey_scanner import HotkeyScanner
+from src.key import keys_to_string
 
 
 class HotkeyScanPushButton(QPushButton):
     DEFAULT_TEXT = "Set keys"
 
-    def __init__(self, parent) -> None:
+    def __init__(self, parent, default_keys=None) -> None:
         super().__init__(HotkeyScanPushButton.DEFAULT_TEXT, parent)
-        self._keys = set()
+        if default_keys:
+            self._keys = default_keys
+            self.setText(keys_to_string(self._keys))
+        else:
+            self._keys = set()
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         self.clicked.connect(self.on_click)
 
@@ -17,20 +23,18 @@ class HotkeyScanPushButton(QPushButton):
         return self._keys
 
     def on_click(self):
-        pass
+        self.on_hotkey_scan_begin()
 
     def on_hotkey_scan_begin(self):
-        self._ui.bScanKeys.setText("Press ESC to stop")
-        self.setDisabled(True)
-        t_scan = threading.Thread(target=self.scan_and_put_in_shortcut)
-        t_scan.start()
+        self.setText("...")
+        self.parent().setDisabled(True)
+        scanner = HotkeyScanner(self.on_hotkey_scan_complete)
+        scanner.start()
 
-    def on_hotkey_scan_complete(self):
-        self.setDisabled(False)
-        self._ui.bScanKeys.setText("Try again")
-        self.update_hotkey_display()
-
-    def scan_and_put_in_shortcut(self):
-        scanned_keys = HotkeyScanner.scan_keys_until_release_all()
-        self._hotkey.set_keys(scanned_keys)
-        self.on_hotkey_scan_complete()
+    def on_hotkey_scan_complete(self, keys):
+        self.parent().setDisabled(False)
+        new_text = keys_to_string(keys)
+        new_text = new_text if len(
+            new_text) > 0 else HotkeyScanPushButton.DEFAULT_TEXT
+        self._keys = keys
+        self.setText(new_text)
