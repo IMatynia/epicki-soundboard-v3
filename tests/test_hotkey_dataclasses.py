@@ -1,12 +1,12 @@
 from src.audio_hotkey import AudioHotkey, AudioHotkeyList, HotkeyCollisionError
-from src.keyboard_hotkeys import Key
+from src.key import Key
 import pytest
 
 
 def test_key_class():
     k = Key("a", 1)
     assert k.name == "a"
-    assert k.scan_code == 1
+    assert k.vk == 1
     assert str(k) == "a (1)"
 
 
@@ -74,14 +74,14 @@ def test_simple_hotkey_list():
 
 def test_save_load_purge_list():
     init_list = [
-        {"keys": [{"name": "*", "scan_code": 1}, {"name": "1",
-                                                  "scan_code": 2}], "filename": "sogga.ogg", "page": 0},
-        {"keys": [{"name": "*", "scan_code": 1}, {"name": "2",
-                                                  "scan_code": 3}], "filename": "floppa.ogg", "page": 0},
-        {"keys": [{"name": "*", "scan_code": 1}, {"name": "3",
-                                                  "scan_code": 4}], "filename": "spingus.ogg", "page": 0},
-        {"keys": [{"name": "*", "scan_code": 1}, {"name": "1",
-                                                  "scan_code": 2}], "filename": "sogga.ogg", "page": 1}
+        {"keys": [{"name": "*", "vk": 1}, {"name": "1",
+                                                  "vk": 2}], "filename": "sogga.ogg", "page": 0},
+        {"keys": [{"name": "*", "vk": 1}, {"name": "2",
+                                                  "vk": 3}], "filename": "floppa.ogg", "page": 0},
+        {"keys": [{"name": "*", "vk": 1}, {"name": "3",
+                                                  "vk": 4}], "filename": "spingus.ogg", "page": 0},
+        {"keys": [{"name": "*", "vk": 1}, {"name": "1",
+                                                  "vk": 2}], "filename": "sogga.ogg", "page": 1}
     ]
 
     hkl = AudioHotkeyList()

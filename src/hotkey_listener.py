@@ -1,86 +1,5 @@
 import pynput
 from bitarray import bitarray
-from logging import info
-# TODO: put these classes into separate files
-
-
-class Key:
-    def __init__(self, name=None, scan_code=None) -> None:
-        self.name = name
-        self.scan_code = scan_code
-
-    def load_from_dict(self, dict):
-        self.name = dict["name"]
-        self.scan_code = dict["scan_code"]
-
-    def save_to_dict(self):
-        out = {
-            "name": self.name,
-            "scan_code": self.scan_code
-        }
-        return out
-
-    def __str__(self) -> str:
-        return f"{self.name} ({self.scan_code})"
-
-    def __hash__(self) -> int:
-        return hash((self.name, self.scan_code))
-
-    def __eq__(self, other) -> bool:
-        return other.name == self.name and other.scan_code == self.scan_code
-
-    def __gt__(self, other) -> bool:
-        return self.name > other.name
-
-
-def keys_to_string(key_set):
-    return " + ".join([key.name for key in sorted(list(key_set))])
-
-# TODO: make this work with a callback ("on scan complete etc")
-class HotkeyScanner:
-    _current_bitset = None
-    _key_hook = None
-    _scanned_keys = None
-
-    @staticmethod
-    def scan_keys_until_release_all():
-        HotkeyScanner._scanned_keys = set()
-        HotkeyScanner._current_bitset = bitarray(2**8)
-        HotkeyScanner._current_bitset.setall(0)
-        HotkeyScanner._key_hook = pynput.keyboard.Listener(
-            HotkeyScanner._keyboard_hook_on_press,
-            HotkeyScanner._keyboard_hook_on_release
-        )
-        HotkeyScanner._key_hook.start()
-        HotkeyScanner._key_hook.join()
-        return HotkeyScanner._scanned_keys
-
-    @staticmethod
-    def _keyboard_hook_on_press(key):
-        if isinstance(key, pynput.keyboard.Key):
-            code = key.value.vk
-            name = key.name
-        else:
-            code = key.vk
-            name = key.char
-
-        # Numpad key
-        if 96 <= code <= 105:
-            name = f"Num {code - 96}"
-
-        if name is None:
-            name = f"key{code}"
-
-        if not HotkeyScanner._current_bitset[code]:
-            HotkeyScanner._scanned_keys.add(Key(name, code))
-            HotkeyScanner._current_bitset[code] = True
-            info(
-                f"New press of {name}/{code}\n{HotkeyScanner._current_bitset}")
-        return True
-
-    @staticmethod
-    def _keyboard_hook_on_release(key):
-        return False
 
 
 class KeyboardHotkeyCallback:
@@ -104,7 +23,7 @@ class KeyboardHotkeyCallback:
         bitmask = bitarray(2**8)
         bitmask.setall(0)
         for key in keys:
-            bitmask[key.scan_code] = True
+            bitmask[key.vk] = True
         return bitmask
 
 
@@ -190,3 +109,8 @@ class HotkeyListener:
             # Bitmap is matching
             if HotkeyListener._current_bitset & callback.key_bitmap == callback.key_bitmap:
                 callback.run()
+
+    @staticmethod
+    def stop():
+        HotkeyListener.remove_all()
+        HotkeyListener._key_hook.stop()

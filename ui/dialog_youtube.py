@@ -7,7 +7,8 @@ from PySide2.QtWidgets import (
 )
 from src.audio_hotkey import AudioHotkey
 import threading
-from src.keyboard_hotkeys import keys_to_string, HotkeyScanner
+from src.key import keys_to_string
+from src.hotkey_scanner import HotkeyScanner
 from src.youtube_dl_handle import download_media
 from src.ffmpeg_handle import ffmpeg_conversion
 from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_YTDL_FILE
@@ -40,7 +41,7 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
     def on_save_begin(self):
         custom_name = self._ui.leName.text()
         url = self._ui.leURL.text()
-        # WIP TODO:
+
         filename = f"{DEFAULT_CUSTOM_FOLDER}/{custom_name}.ogg"
         self._hotkey.set_filename(filename)
 
@@ -66,7 +67,7 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
         self.set_status("Starting download", 0)
 
         def callback(line):
-            matches = re.findall("\ [1234567890\.]*%", line)
+            matches = re.findall("\\ [1234567890\.]*%", line)
             if len(matches) > 0:
                 percentage = float(matches[0][1:-1])*0.9
                 self.set_status("Downloading media via YT-DL", percentage)

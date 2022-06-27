@@ -1,3 +1,5 @@
+from src.key import Key
+
 SETTINGS_VERSION = "V1.0"
 
 
@@ -16,13 +18,13 @@ class Settings:
         self._s_main_on = True
         self._s_singular = False
 
-        # Shortcuts: TODO: change format
-        self._s_toggle_main = "*|/"
-        self._s_toggle_singular = "-|/"
-        self._s_loud_up = "*|+"
-        self._s_loud_down = "*|-"
-        self._s_silence = "End"
-        self._s_tts_play = "]"
+        # Shortcuts, defaults:
+        self._s_toggle_main = {Key("/", 111), Key("-", 109)}
+        self._s_toggle_singular = {Key("/", 111), Key("*", 106)}
+        self._s_loud_up = {Key("*", 106), Key("+", 107)}
+        self._s_loud_down = {Key("*", 106), Key("-", 109)}
+        self._s_silence = {Key("End", 35)}
+        self._s_tts_play = {Key("[", 219)}
 
         # Not saved:
         self._loudness_multiplier = 1.0
@@ -40,10 +42,20 @@ class Settings:
         """
         for key in self.__dict__:
             try:
+                key_nicer = key[3::]
                 if key[0:3] == "_s_":
-                    self.__setattr__(key, dict_data[key[3::]])
+                    if isinstance(dict_data[key_nicer], list):
+                        # Load hotkey sets
+                        out = set()
+                        for key_data in dict_data[key_nicer]:
+                            new_key = Key()
+                            new_key.load_from_dict(key_data)
+                            out.add(new_key)
+                        self.__setattr__(key, out)
+                    else:
+                        self.__setattr__(key, dict_data[key_nicer])
             except KeyError:
-                raise MissingConfigFieldError(key[3::])
+                raise MissingConfigFieldError(key_nicer)
 
     def save_to_dict(self):
         """Stores all "_s_" fields in the dict
@@ -55,8 +67,14 @@ class Settings:
             "conf-version": SETTINGS_VERSION
         }
         for key in self.__dict__:
+            key_nicer = key[3::]
             if key[0:3] == "_s_":
-                out[key[3::]] = self.__dict__[key]
+                if isinstance(self.__dict__[key], set):
+                    # Save hotkey set
+                    out[key_nicer] = [key_obj.save_to_dict()
+                                      for key_obj in self.__dict__[key]]
+                else:
+                    out[key_nicer] = self.__dict__[key]
         return out
 
     def get_additional_device(self):
@@ -97,3 +115,40 @@ class Settings:
     def set_play_on_main(self, value):
         assert isinstance(value, bool)
         self._s_main_on = value
+
+    # :/ not fun
+    def get_keys_toggle_main(self):
+        return self._s_toggle_main
+
+    def get_keys_toggle_singular(self):
+        return self._s_toggle_singular
+
+    def get_keys_loud_up(self):
+        return self._s_loud_up
+
+    def get_keys_loud_down(self):
+        return self._s_loud_down
+
+    def get_keys_silence(self):
+        return self._s_silence
+
+    def get_keys_tts_play(self):
+        return self._s_tts_play
+
+    def set_keys_toggle_main(self, keys):
+        self._s_toggle_main = keys
+
+    def set_keys_toggle_singular(self, keys):
+        self._s_toggle_singular = keys
+
+    def set_keys_loud_up(self, keys):
+        self._s_loud_up = keys
+
+    def set_keys_loud_down(self, keys):
+        self._s_loud_down = keys
+
+    def set_keys_silence(self, keys):
+        self._s_silence = keys
+
+    def set_keys_tts_play(self, keys):
+        self._s_tts_play = keys

@@ -5,11 +5,12 @@ from PySide2.QtWidgets import (
 )
 from src.audio_hotkey import AudioHotkey
 import threading
-from src.keyboard_hotkeys import keys_to_string, HotkeyScanner
+from src.key import keys_to_string
+from src.hotkey_scanner import HotkeyScanner
 from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_TTS_FILE
 
 
-class AddCurrentTTS(QDialog):
+class AddCurrentTTSDialog(QDialog):
     def __init__(self, parent, hotkey_list, page) -> None:
         super().__init__(parent)
         self._ui = Ui_AddFromTTS()

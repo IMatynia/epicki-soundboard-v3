@@ -5,7 +5,8 @@ from ui.utility_popup_box import MessageBoxesInterface
 from ui.layouts.Ui_MainWindow import Ui_MainWindow
 from ui.dialog_add_edit_file import AddEditFileDialog
 from ui.dialog_youtube import AddYoutubeDialog
-from ui.dialog_TTS import AddCurrentTTS
+from ui.dialog_TTS import AddCurrentTTSDialog
+from ui.dialog_edit_settings import EditSettingsDialog
 from PySide2.QtWidgets import (
     QMainWindow, QTableWidgetItem, QTableWidget
 )
@@ -13,8 +14,9 @@ from logging import info
 from src.settings import Settings
 from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
-from src.keyboard_hotkeys import HotkeyListener, keys_to_string
-from src.utils import check_if_program_present_in_path
+from src.key import keys_to_string
+from src.hotkey_listener import HotkeyListener
+from src.utils import check_if_program_present_in_path, print_detail_about_present_device
 
 
 class HotkeyTableItemWidget(QTableWidgetItem):
@@ -54,6 +56,7 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         self._ui.bNextPage.clicked.connect(self.on_next_page)
         self._ui.bPrevPage.clicked.connect(self.on_prev_page)
 
+        self._ui.actionEdit_settings.triggered.connect(self.on_edit_settings)
         self._ui.actionSave.triggered.connect(self.save_config)
         self._ui.actionReload.triggered.connect(self.reload_config)
 
@@ -92,7 +95,8 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
                     "You need ffmpeg and youtube-dl in path to use this feature!")
         elif selected_type == "Current TTS":
             if path.exists(TEMP_TTS_FILE):
-                dialog = AddCurrentTTS(self, self._hotkeys, self._current_page)
+                dialog = AddCurrentTTSDialog(
+                    self, self._hotkeys, self._current_page)
                 dialog.show()
 
                 if dialog.exec_():
@@ -142,8 +146,7 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
 
         for file in files_to_play:
             try:
-                th = MultiAudioPlayThread(file, self._settings)
-                th.start()
+                multi_audio_play_async(file, self._settings)
             except FileNotFoundError:
                 # TODO: handle this excpetion
                 pass
@@ -161,6 +164,10 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             self._ui.lbPage.setText(f"{self._current_page}")
             self.reload_table_contents()
             self.reload_hotkey_hooks()
+
+    def on_edit_settings(self):
+        dialog = EditSettingsDialog(self, self._settings)
+        dialog.show()
 
     def on_TTS_manager(self):
         # TODO: implement this dialog
@@ -194,6 +201,11 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
                                       [audio_hotkey.get_filename(), self._settings])
 
         # QOL shortkeys
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_silence(),
+            print_detail_about_present_device,
+            [self._settings]
+        )
 
     def save_config(self):
         """Saves current settings ang hotkeys into the config file

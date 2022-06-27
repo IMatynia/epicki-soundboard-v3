@@ -1,4 +1,4 @@
-from src.keyboard_hotkeys import Key
+from src.key import Key
 
 
 class AudioHotkey:

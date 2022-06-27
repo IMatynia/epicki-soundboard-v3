@@ -1,7 +1,8 @@
 from ui.dialog_add_edit_file import AddEditFileDialog
 from src.audio_hotkey import AudioHotkey, AudioHotkeyList
 from PySide2.QtWidgets import QApplication, QMainWindow
-from src.keyboard_hotkeys import Key
+from src.key import Key
+from ui.hotkey_scan_button import HotkeyScanPushButton
 
 
 def test_add_edit_with_initial_hk():
@@ -24,3 +25,12 @@ def test_add_edit_with_initial_hk():
         new = dialog.get_hotkey()
         assert new == example
     app.closeAllWindows()
+
+
+def test_hotkey_scan_button():
+    app = QApplication()
+    main = QMainWindow(None)
+    button = HotkeyScanPushButton(main)
+    main.show()
+    app.exec_()
+    

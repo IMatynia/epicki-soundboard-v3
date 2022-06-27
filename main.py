@@ -3,7 +3,7 @@ import sys
 from PySide2.QtWidgets import QApplication
 from ui.main_window import MainWindow
 import os
-from src.keyboard_hotkeys import HotkeyListener
+from src.hotkey_listener import HotkeyListener
 from src.audio_handle import stop_all_sounds
 from src.constants import DEFAULT_CUSTOM_FOLDER
 
@@ -25,6 +25,7 @@ def setup():
 
 
 def closure():
+    HotkeyListener.stop()
     stop_all_sounds()
 
 
