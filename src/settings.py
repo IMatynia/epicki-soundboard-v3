@@ -25,6 +25,7 @@ class Settings:
         self._s_loud_down = {Key("*", 106), Key("-", 109)}
         self._s_silence = {Key("End", 35)}
         self._s_tts_play = {Key("[", 219)}
+        self._s_tts_open_manager = {Key("]", 221)}
 
         # Not saved:
         self._loudness_multiplier = 1.0
@@ -83,11 +84,21 @@ class Settings:
     def get_additional_device_num(self):
         return self._s_additional_device_number
 
+    def set_additional_device(self, name, id):
+        self._s_additional_device = name
+        self._s_additional_device_number = id
+
     def get_window_h_pos(self):
         return self._s_window_h_pos
 
+    def set_window_h_pos(self, y):
+        self._s_window_h_pos = y
+
     def get_window_v_pos(self):
         return self._s_window_v_pos
+
+    def set_window_v_pos(self, x):
+        self._s_window_v_pos = x
 
     def get_play_on_main(self):
         """Should i play the audio on the primary device too?
@@ -97,6 +108,12 @@ class Settings:
         """
         return self._s_main_on
 
+    def set_play_on_main(self, value):
+        self._s_main_on = bool(value)
+
+    def toggle_play_on_main(self):
+        self._s_main_on ^= 1
+
     def get_is_singular(self):
         """Should i play only one sound at once?
 
@@ -105,24 +122,17 @@ class Settings:
         """
         return self._s_singular
 
-    def get_loudness(self):
-        return self._loudness_multiplier
-
-    def set_additional_device(self, name, id):
-        self._s_additional_device = name
-        self._s_additional_device_number = id
-
-    def set_play_on_main(self, value):
-        self._s_main_on = bool(value)
-
-    def toggle_play_on_main(self):
-        self._s_main_on ^= 1
-
     def set_singular_audio(self, value):
         self._s_singular = bool(value)
 
     def toggle_singular_audio(self):
         self._s_singular ^= 1
+
+    def get_loudness(self):
+        return self._loudness_multiplier
+
+    def modify_loudness(self, multiplier):
+        self._loudness_multiplier *= multiplier
 
     # :/ not fun
     def get_keys_toggle_main(self):
@@ -143,6 +153,9 @@ class Settings:
     def get_keys_tts_play(self):
         return self._s_tts_play
 
+    def get_keys_tts_open_manager(self):
+        return self._s_tts_open_manager
+
     def set_keys_toggle_main(self, keys):
         self._s_toggle_main = keys
 
@@ -160,3 +173,6 @@ class Settings:
 
     def set_keys_tts_play(self, keys):
         self._s_tts_play = keys
+
+    def set_keys_tts_open_manager(self, keys):
+        self._s_tts_open_manager = keys
