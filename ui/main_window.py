@@ -5,7 +5,7 @@ from ui.utility_popup_box import MessageBoxesInterface
 from ui.layouts.Ui_MainWindow import Ui_MainWindow
 from ui.dialog_add_edit_file import AddEditFileDialog
 from ui.dialog_youtube import AddYoutubeDialog
-from ui.dialog_TTS import AddCurrentTTSDialog
+from ui.dialog_add_current_TTS import AddCurrentTTSDialog
 from ui.dialog_edit_settings import EditSettingsDialog
 from PySide2.QtWidgets import (
     QMainWindow, QTableWidgetItem, QTableWidget
@@ -64,6 +64,8 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         # Minor UI setup
         self._ui.lbPage.setText(f"{self._current_page}")
         self._ui.tvHotkeys.sortItems(0)
+        self.move(self._settings.get_window_h_pos(),
+                  self._settings.get_window_v_pos())
 
     def on_hotkey_dobule_clicked(self, item: "HotkeyTableItemWidget"):
         filename = item.get_hotkey_ref().get_filename()

@@ -68,7 +68,7 @@ class MultiAudioPlayThread(threading.Thread):
             secondary_device.close()
 
     def stop_this(self):
-        info(f"Stopping sound on thread {self.name}")
+        info(f"Stopping sound on {self.name}")
         self._stopped = True
 
     def audio_processor(self, block_raw):
