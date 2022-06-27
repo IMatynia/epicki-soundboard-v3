@@ -95,10 +95,11 @@ def get_device_number(device):
 
 
 def get_devices_supporting_stereo_output():
-    out = []
-    for device in get_devices():
-        if device["max_input_channels"] == 0 and device["max_output_channels"] >= 2:
-            out.append(device)
+    out = {}
+    for i, device in enumerate(get_devices()):
+        if device["max_input_channels"] == 0 and device["max_output_channels"] >= 2 and device["hostapi"] == 0:
+            out[i] = device
+    return out
 
 
 def get_devices():
