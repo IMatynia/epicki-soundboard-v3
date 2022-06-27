@@ -113,8 +113,16 @@ class Settings:
         self._s_additional_device_number = id
 
     def set_play_on_main(self, value):
-        assert isinstance(value, bool)
-        self._s_main_on = value
+        self._s_main_on = bool(value)
+
+    def toggle_play_on_main(self):
+        self._s_main_on ^= 1
+
+    def set_singular_audio(self, value):
+        self._s_singular = bool(value)
+
+    def toggle_singular_audio(self):
+        self._s_singular ^= 1
 
     # :/ not fun
     def get_keys_toggle_main(self):
