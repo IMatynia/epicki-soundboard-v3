@@ -85,7 +85,9 @@ def stop_all_sounds():
     _ALL_AUDIO_THREADS = []
 
 
-def multi_audio_play_async(filename, settings):
+def multi_audio_play_async(filename, settings: "Settings"):
+    if settings.get_is_singular():
+        stop_all_sounds()
     th = MultiAudioPlayThread(filename, settings)
     th.start()
 
