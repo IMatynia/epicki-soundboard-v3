@@ -15,7 +15,7 @@ from logging import info
 from src.settings import Settings
 from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME, DEFAULT_SOUND_MULTIPLIER
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
-from src.key import keys_to_string
+from src.key import keys_to_string, Key
 from src.hotkey_listener import HotkeyListener
 from src.utils import check_if_program_present_in_path
 
@@ -259,7 +259,17 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             [1/DEFAULT_SOUND_MULTIPLIER]
         )
 
+        # Next page
+        HotkeyListener.add_hotkey(
+            {Key(">", 39)},
+            self._ui.bNextPage.click
+        )
 
+        # Prev page
+        HotkeyListener.add_hotkey(
+            {Key("<", 37)},
+            self._ui.bPrevPage.click
+        )
 
     def save_config(self):
         """Saves current settings ang hotkeys into the config file
