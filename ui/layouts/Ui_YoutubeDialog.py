@@ -34,21 +34,21 @@ class Ui_AddYoutubeDL(object):
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.bScanKeys = QPushButton(AddYoutubeDL)
-        self.bScanKeys.setObjectName(u"bScanKeys")
-
-        self.horizontalLayout_2.addWidget(self.bScanKeys)
-
         self.lKeys = QLabel(AddYoutubeDL)
         self.lKeys.setObjectName(u"lKeys")
-        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lKeys.sizePolicy().hasHeightForWidth())
         self.lKeys.setSizePolicy(sizePolicy)
-        self.lKeys.setAlignment(Qt.AlignCenter)
+        self.lKeys.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.horizontalLayout_2.addWidget(self.lKeys)
+
+        self.buttonPlaceholder = QVBoxLayout()
+        self.buttonPlaceholder.setObjectName(u"buttonPlaceholder")
+
+        self.horizontalLayout_2.addLayout(self.buttonPlaceholder)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
@@ -107,8 +107,7 @@ class Ui_AddYoutubeDL(object):
 #endif // QT_CONFIG(tooltip)
         self.leURL.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Media URL", None))
         self.leName.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Custom name", None))
-        self.bScanKeys.setText(QCoreApplication.translate("AddYoutubeDL", u"Set keys", None))
-        self.lKeys.setText(QCoreApplication.translate("AddYoutubeDL", u"Awaiting input", None))
+        self.lKeys.setText(QCoreApplication.translate("AddYoutubeDL", u"Key combination", None))
         self.lStatus.setText(QCoreApplication.translate("AddYoutubeDL", u"Standing by...", None))
         self.bSave.setText(QCoreApplication.translate("AddYoutubeDL", u"Save", None))
         self.bCancel.setText(QCoreApplication.translate("AddYoutubeDL", u"Cancel", None))

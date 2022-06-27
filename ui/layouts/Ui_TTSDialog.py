@@ -18,9 +18,7 @@ class Ui_AddFromTTS(object):
         if not AddFromTTS.objectName():
             AddFromTTS.setObjectName(u"AddFromTTS")
         AddFromTTS.resize(360, 129)
-        self.verticalLayout_2 = QVBoxLayout(AddFromTTS)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout = QVBoxLayout(AddFromTTS)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.leName = QLineEdit(AddFromTTS)
         self.leName.setObjectName(u"leName")
@@ -29,31 +27,28 @@ class Ui_AddFromTTS(object):
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.bScanKeys = QPushButton(AddFromTTS)
-        self.bScanKeys.setObjectName(u"bScanKeys")
-
-        self.horizontalLayout_2.addWidget(self.bScanKeys)
-
         self.lKeys = QLabel(AddFromTTS)
         self.lKeys.setObjectName(u"lKeys")
-        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lKeys.sizePolicy().hasHeightForWidth())
         self.lKeys.setSizePolicy(sizePolicy)
-        self.lKeys.setAlignment(Qt.AlignCenter)
+        self.lKeys.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.horizontalLayout_2.addWidget(self.lKeys)
+
+        self.buttonPlaceholder = QVBoxLayout()
+        self.buttonPlaceholder.setObjectName(u"buttonPlaceholder")
+
+        self.horizontalLayout_2.addLayout(self.buttonPlaceholder)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 11, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
-
-
-        self.verticalLayout_2.addLayout(self.verticalLayout)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -73,7 +68,7 @@ class Ui_AddFromTTS(object):
         self.horizontalLayout.addWidget(self.bCancel)
 
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout)
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
 
         self.retranslateUi(AddFromTTS)
@@ -90,8 +85,7 @@ class Ui_AddFromTTS(object):
         self.leName.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.leName.setPlaceholderText(QCoreApplication.translate("AddFromTTS", u"Custom name", None))
-        self.bScanKeys.setText(QCoreApplication.translate("AddFromTTS", u"Set keys", None))
-        self.lKeys.setText(QCoreApplication.translate("AddFromTTS", u"Awaiting input", None))
+        self.lKeys.setText(QCoreApplication.translate("AddFromTTS", u"Key combination", None))
         self.bSave.setText(QCoreApplication.translate("AddFromTTS", u"Save", None))
         self.bCancel.setText(QCoreApplication.translate("AddFromTTS", u"Cancel", None))
     # retranslateUi

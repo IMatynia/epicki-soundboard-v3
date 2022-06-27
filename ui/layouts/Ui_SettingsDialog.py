@@ -17,7 +17,7 @@ class Ui_SettingsDialog(object):
     def setupUi(self, SettingsDialog):
         if not SettingsDialog.objectName():
             SettingsDialog.setObjectName(u"SettingsDialog")
-        SettingsDialog.resize(420, 400)
+        SettingsDialog.resize(340, 267)
         self.verticalLayout = QVBoxLayout(SettingsDialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(SettingsDialog)
@@ -40,50 +40,10 @@ class Ui_SettingsDialog(object):
 
         self.verticalLayout.addWidget(self.cPlaySingle)
 
-        self.formLayout = QFormLayout()
-        self.formLayout.setObjectName(u"formLayout")
-        self.bScanToggleMain = QPushButton(SettingsDialog)
-        self.bScanToggleMain.setObjectName(u"bScanToggleMain")
+        self.glHotkeys = QGridLayout()
+        self.glHotkeys.setObjectName(u"glHotkeys")
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.bScanToggleMain)
-
-        self.label_2 = QLabel(SettingsDialog)
-        self.label_2.setObjectName(u"label_2")
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.label_2)
-
-        self.bScanToggleSingular = QPushButton(SettingsDialog)
-        self.bScanToggleSingular.setObjectName(u"bScanToggleSingular")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.bScanToggleSingular)
-
-        self.label_3 = QLabel(SettingsDialog)
-        self.label_3.setObjectName(u"label_3")
-
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.label_3)
-
-        self.bScanVolUp = QPushButton(SettingsDialog)
-        self.bScanVolUp.setObjectName(u"bScanVolUp")
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.bScanVolUp)
-
-        self.label_4 = QLabel(SettingsDialog)
-        self.label_4.setObjectName(u"label_4")
-
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.label_4)
-
-        self.bScanVolDown = QPushButton(SettingsDialog)
-        self.bScanVolDown.setObjectName(u"bScanVolDown")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.bScanVolDown)
-
-        self.label_5 = QLabel(SettingsDialog)
-        self.label_5.setObjectName(u"label_5")
-
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.label_5)
-
-
-        self.verticalLayout.addLayout(self.formLayout)
+        self.verticalLayout.addLayout(self.glHotkeys)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -168,14 +128,6 @@ class Ui_SettingsDialog(object):
         self.label.setText(QCoreApplication.translate("SettingsDialog", u"Additional device", None))
         self.cPlayOnMain.setText(QCoreApplication.translate("SettingsDialog", u"Play on main device too", None))
         self.cPlaySingle.setText(QCoreApplication.translate("SettingsDialog", u"Play only one sound at once", None))
-        self.bScanToggleMain.setText(QCoreApplication.translate("SettingsDialog", u"Awaiting input", None))
-        self.label_2.setText(QCoreApplication.translate("SettingsDialog", u"Toggle playing on main device", None))
-        self.bScanToggleSingular.setText(QCoreApplication.translate("SettingsDialog", u"Awaiting input", None))
-        self.label_3.setText(QCoreApplication.translate("SettingsDialog", u"Toggle playing single sound", None))
-        self.bScanVolUp.setText(QCoreApplication.translate("SettingsDialog", u"Awaiting input", None))
-        self.label_4.setText(QCoreApplication.translate("SettingsDialog", u"Increase volume", None))
-        self.bScanVolDown.setText(QCoreApplication.translate("SettingsDialog", u"Awaiting input", None))
-        self.label_5.setText(QCoreApplication.translate("SettingsDialog", u"Decrease volume", None))
         self.label_6.setText(QCoreApplication.translate("SettingsDialog", u"Current window position:", None))
         self.lWindowPos.setText(QCoreApplication.translate("SettingsDialog", u"[POSITION]", None))
         self.label_7.setText(QCoreApplication.translate("SettingsDialog", u"Vertical window pos", None))

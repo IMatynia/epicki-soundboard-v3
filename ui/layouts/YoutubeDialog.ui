@@ -36,27 +36,23 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QPushButton" name="bScanKeys">
-         <property name="text">
-          <string>Set keys</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLabel" name="lKeys">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Awaiting input</string>
+          <string>Key combination</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
         </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="buttonPlaceholder"/>
        </item>
       </layout>
      </item>

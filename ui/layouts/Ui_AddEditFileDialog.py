@@ -17,39 +17,38 @@ class Ui_AddEditFileDialog(object):
     def setupUi(self, AddEditFileDialog):
         if not AddEditFileDialog.objectName():
             AddEditFileDialog.setObjectName(u"AddEditFileDialog")
-        AddEditFileDialog.resize(360, 131)
+        AddEditFileDialog.resize(360, 129)
         self.verticalLayout = QVBoxLayout(AddEditFileDialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.formLayout = QFormLayout()
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setSizeConstraint(QLayout.SetMaximumSize)
-        self.leFilePath = QLineEdit(AddEditFileDialog)
-        self.leFilePath.setObjectName(u"leFilePath")
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.leFilePath)
-
-        self.bScanKeys = QPushButton(AddEditFileDialog)
-        self.bScanKeys.setObjectName(u"bScanKeys")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.bScanKeys)
-
-        self.lKeys = QLabel(AddEditFileDialog)
-        self.lKeys.setObjectName(u"lKeys")
-        self.lKeys.setAlignment(Qt.AlignCenter)
-
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lKeys)
-
         self.bChooseFile = QPushButton(AddEditFileDialog)
         self.bChooseFile.setObjectName(u"bChooseFile")
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.bChooseFile)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.leFilePath = QLineEdit(AddEditFileDialog)
+        self.leFilePath.setObjectName(u"leFilePath")
 
-        self.formLayout.setItem(2, QFormLayout.FieldRole, self.verticalSpacer)
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.leFilePath)
+
+        self.label = QLabel(AddEditFileDialog)
+        self.label.setObjectName(u"label")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label)
+
+        self.buttonPlaceholder = QVBoxLayout()
+        self.buttonPlaceholder.setObjectName(u"buttonPlaceholder")
+
+        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.buttonPlaceholder)
 
 
         self.verticalLayout.addLayout(self.formLayout)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -82,13 +81,12 @@ class Ui_AddEditFileDialog(object):
 
     def retranslateUi(self, AddEditFileDialog):
         AddEditFileDialog.setWindowTitle(QCoreApplication.translate("AddEditFileDialog", u"Add or edit hotkey", None))
+        self.bChooseFile.setText(QCoreApplication.translate("AddEditFileDialog", u"Select file", None))
 #if QT_CONFIG(tooltip)
         self.leFilePath.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.leFilePath.setPlaceholderText(QCoreApplication.translate("AddEditFileDialog", u"Path to file", None))
-        self.bScanKeys.setText(QCoreApplication.translate("AddEditFileDialog", u"Set keys", None))
-        self.lKeys.setText(QCoreApplication.translate("AddEditFileDialog", u"Awaiting input", None))
-        self.bChooseFile.setText(QCoreApplication.translate("AddEditFileDialog", u"Select file", None))
+        self.label.setText(QCoreApplication.translate("AddEditFileDialog", u"Key combination:", None))
         self.bSave.setText(QCoreApplication.translate("AddEditFileDialog", u"Save", None))
         self.bCancel.setText(QCoreApplication.translate("AddEditFileDialog", u"Cancel", None))
     # retranslateUi
