@@ -6,28 +6,38 @@ from src.key import Key
 
 
 class HotkeyScanner:
-    _current_bitset = None
-    _key_hook = None
-    _scanned_keys = None
+    def __init__(self, callback):
+        """Creates a scanner object
 
-    @staticmethod
-    def scan_keys_until_release_all():
+        Args:
+            callback (function): called when the scanning is finished, takes one argument - scanned keys
+        """
+        self._current_bitset = None
+        self._key_hook = None
+        self._callback = callback
+        self._key_hook = None
+        self._scanned_keys = None
+
+    def start(self):
+        """Starts the hotkeys scanning. When completed, the callback will be called
+        """
         HotkeyListener.set_enabled(False)
-        HotkeyScanner._scanned_keys = set()
-        HotkeyScanner._current_bitset = bitarray(2**8)
-        HotkeyScanner._current_bitset.setall(0)
-        HotkeyScanner._key_hook = pynput.keyboard.Listener(
-            HotkeyScanner._keyboard_hook_on_press,
-            HotkeyScanner._keyboard_hook_on_release,
+        self._scanned_keys = set()
+        self._current_bitset = bitarray(2**8)
+        self._current_bitset.setall(0)
+        self._key_hook = pynput.keyboard.Listener(
+            self._keyboard_hook_on_press,
+            self._keyboard_hook_on_release,
             True
         )
-        HotkeyScanner._key_hook.start()
-        HotkeyScanner._key_hook.join()
-        HotkeyListener.set_enabled(True)
-        return HotkeyScanner._scanned_keys
+        self._key_hook.start()
 
-    @staticmethod
-    def _keyboard_hook_on_press(key):
+    def await_completion(self):
+        self._key_hook.join()
+
+    def _keyboard_hook_on_press(self, key):
+        """Add each keypress to the scanned keys set
+        """
         if isinstance(key, pynput.keyboard.Key):
             code = key.value.vk
             name = key.name
@@ -42,13 +52,17 @@ class HotkeyScanner:
         if name is None:
             name = f"key{code}"
 
-        if not HotkeyScanner._current_bitset[code]:
-            HotkeyScanner._scanned_keys.add(Key(name, code))
-            HotkeyScanner._current_bitset[code] = True
+        if not self._current_bitset[code]:
+            self._scanned_keys.add(Key(name, code))
+            self._current_bitset[code] = True
             info(
-                f"New press of {name}/{code}\n{HotkeyScanner._current_bitset}")
+                f"New press of {name}/{code}\n{self._current_bitset}")
         return True
 
-    @staticmethod
-    def _keyboard_hook_on_release(key):
+    def _keyboard_hook_on_release(self, key):
+        """When scanning is complete (any of the keys was lifted) call the callback with scanned keys
+        """
+        HotkeyListener.set_enabled(True)
+        if self._callback:
+            self._callback(self._scanned_keys)
         return False
