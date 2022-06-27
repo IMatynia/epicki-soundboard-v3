@@ -1,6 +1,6 @@
 from os import remove
 from src.ffmpeg_handle import ffmpeg_conversion
-from src.constants import TEMP_TTS_FILE
+from src.constants import TEMP_TTS_FILE_MP3
 import gtts
 
 _LANGUAGE_LIST = list(gtts.lang.tts_langs())
@@ -26,7 +26,7 @@ def generate_tts_ogg(text, lang, filename):
         raise InvalidLanguageError()
 
     tts = gtts.gTTS(text=text, lang=lang)
-    tts.save(TEMP_TTS_FILE)
-    ffmpeg_conversion(TEMP_TTS_FILE, filename)
-    remove(TEMP_TTS_FILE)
+    tts.save(TEMP_TTS_FILE_MP3)
+    ffmpeg_conversion(TEMP_TTS_FILE_MP3, filename)
+    remove(TEMP_TTS_FILE_MP3)
     return
