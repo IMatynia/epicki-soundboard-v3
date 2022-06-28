@@ -9,3 +9,4 @@ _notes/
 make
 *.json
 *.bat
+*.log
