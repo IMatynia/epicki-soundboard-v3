@@ -60,7 +60,7 @@ class AudioHotkey:
 
     def save_as_dict(self):
         return {
-            "keys": [key.save_to_dict() for key in self._keys],
+            "keys": [key.save_to_dict() for key in sorted(self._keys)],
             "filename": self._filename,
             "page": self._page
         }

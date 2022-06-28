@@ -74,7 +74,7 @@ class Settings:
                 if isinstance(self.__dict__[key], set):
                     # Save hotkey set
                     out[key_nicer] = [key_obj.save_to_dict()
-                                      for key_obj in self.__dict__[key]]
+                                      for key_obj in sorted(self.__dict__[key])]
                 else:
                     out[key_nicer] = self.__dict__[key]
         return out

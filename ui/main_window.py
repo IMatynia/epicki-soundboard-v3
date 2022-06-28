@@ -222,6 +222,13 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             self.reload_table_contents()
             self.reload_hotkey_hooks()
 
+    def closeEvent(self, event) -> None:
+        if not self.check_config_changed():
+            choice = self.show_choice("Config changed, save it?")
+            if choice:
+                self.save_config()
+        return super().closeEvent(event)
+
     def reload_table_contents(self):
         """Reloads all items in the table
         """
@@ -313,6 +320,23 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             {Key("<", 37)},
             self._ui.bPrevPage.click
         )
+
+    def check_config_changed(self):
+        current_data = {
+            "settings": self._settings.save_to_dict(),
+            "hotkeys": self._hotkeys.save_to_list()
+        }
+
+        data_in_file = None
+        try:
+            with open(CONFIG_FILENAME, "r") as config_file:
+                data_in_file = json.load(config_file)
+        except FileNotFoundError:
+            info("Missing config file")
+        except json.JSONDecodeError:
+            info("Config file invalid")
+
+        return current_data == data_in_file
 
     def save_config(self):
         """Saves current settings ang hotkeys into the config file
