@@ -35,6 +35,12 @@ class Ui_MainWindow(object):
         self.actionOpen_tts_manager.setObjectName(u"actionOpen_tts_manager")
         self.actionPlay_current_file = QAction(MainWindow)
         self.actionPlay_current_file.setObjectName(u"actionPlay_current_file")
+        self.action_Move_to_page = QAction(MainWindow)
+        self.action_Move_to_page.setObjectName(u"action_Move_to_page")
+        self.actionRemove_with_missing_files = QAction(MainWindow)
+        self.actionRemove_with_missing_files.setObjectName(u"actionRemove_with_missing_files")
+        self.actionPurge_unused_files_in_customs_folder = QAction(MainWindow)
+        self.actionPurge_unused_files_in_customs_folder.setObjectName(u"actionPurge_unused_files_in_customs_folder")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -175,6 +181,9 @@ class Ui_MainWindow(object):
         self.menuData.addAction(self.actionEdit_settings)
         self.menuText_to_speech.addAction(self.actionOpen_tts_manager)
         self.menuText_to_speech.addAction(self.actionPlay_current_file)
+        self.menuMisc.addAction(self.action_Move_to_page)
+        self.menuMisc.addAction(self.actionRemove_with_missing_files)
+        self.menuMisc.addAction(self.actionPurge_unused_files_in_customs_folder)
 
         self.retranslateUi(MainWindow)
 
@@ -189,6 +198,9 @@ class Ui_MainWindow(object):
         self.actionOpen_settings_directory.setText(QCoreApplication.translate("MainWindow", u"&Open settings directory", None))
         self.actionOpen_tts_manager.setText(QCoreApplication.translate("MainWindow", u"&Open tts manager", None))
         self.actionPlay_current_file.setText(QCoreApplication.translate("MainWindow", u"&Play current file", None))
+        self.action_Move_to_page.setText(QCoreApplication.translate("MainWindow", u"&Move to page", None))
+        self.actionRemove_with_missing_files.setText(QCoreApplication.translate("MainWindow", u"&Remove with missing files", None))
+        self.actionPurge_unused_files_in_customs_folder.setText(QCoreApplication.translate("MainWindow", u"&Purge unused files in customs folder", None))
         ___qtablewidgetitem = self.tvHotkeys.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Hotkey", None));
         ___qtablewidgetitem1 = self.tvHotkeys.horizontalHeaderItem(1)

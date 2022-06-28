@@ -289,6 +289,9 @@
     <property name="title">
      <string>&amp;Misc</string>
     </property>
+    <addaction name="action_Move_to_page"/>
+    <addaction name="actionRemove_with_missing_files"/>
+    <addaction name="actionPurge_unused_files_in_customs_folder"/>
    </widget>
    <widget class="QMenu" name="menuINFO">
     <property name="title">
@@ -329,6 +332,21 @@
   <action name="actionPlay_current_file">
    <property name="text">
     <string>&amp;Play current file</string>
+   </property>
+  </action>
+  <action name="action_Move_to_page">
+   <property name="text">
+    <string>&amp;Move to page</string>
+   </property>
+  </action>
+  <action name="actionRemove_with_missing_files">
+   <property name="text">
+    <string>&amp;Remove with missing files</string>
+   </property>
+  </action>
+  <action name="actionPurge_unused_files_in_customs_folder">
+   <property name="text">
+    <string>&amp;Purge unused files in customs folder</string>
    </property>
   </action>
  </widget>
