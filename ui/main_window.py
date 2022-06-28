@@ -9,7 +9,10 @@ from ui.dialog_add_current_TTS import AddCurrentTTSDialog
 from ui.dialog_edit_TTS import TTSManagerDialog
 from ui.dialog_edit_settings import EditSettingsDialog
 from PySide2.QtWidgets import (
-    QMainWindow, QTableWidgetItem
+    QMainWindow, QTableWidgetItem, QInputDialog
+)
+from PySide2.QtGui import (
+    QColor
 )
 from logging import info
 from src.settings import Settings
@@ -17,7 +20,7 @@ from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME, DEFAULT_SOUND_MULTIPLI
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
 from src.key import keys_to_string, Key
 from src.hotkey_listener import HotkeyListener
-from src.utils import check_if_program_present_in_path
+from src.utils import check_if_program_present_in_path, get_shortened_filename
 
 
 class HotkeyTableItemWidget(QTableWidgetItem):
@@ -57,12 +60,16 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         self._ui.bNextPage.clicked.connect(self.on_next_page)
         self._ui.bPrevPage.clicked.connect(self.on_prev_page)
 
+        # action triggers
         self._ui.actionEdit_settings.triggered.connect(self.on_edit_settings)
         self._ui.actionSave.triggered.connect(self.save_config)
         self._ui.actionReload.triggered.connect(self.reload_config)
         self._ui.actionOpen_tts_manager.triggered.connect(self.on_TTS_manager)
         self._ui.actionPlay_current_file.triggered.connect(
             self.play_temporary_tts)
+        self._ui.action_Move_to_page.triggered.connect(self.on_move_to_page)
+        # self._ui.actionRemove_with_missing_files.connect(
+        #     self.on_remove_missing_files)
 
         # Minor UI setup
         self._ui.lbPage.setText(f"{self._current_page}")
@@ -140,6 +147,11 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         for selection in self._ui.tvHotkeys.selectedItems():
             hotkeys_to_remove.add(selection.get_hotkey_ref())
 
+        choice = self.show_choice(
+            f"Are you sure you want to remove {len(hotkeys_to_remove)} hotkeys?")
+        if not choice:
+            return
+
         for hotkey in hotkeys_to_remove:
             self._hotkeys.remove_hotkey(hotkey)
         self.reload_table_contents()
@@ -186,9 +198,35 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         dialog.show()
         dialog.exec_()
 
+    def on_move_to_page(self):
+        new_page, accepted = QInputDialog.getInt(self,
+                                                 "Move selection",
+                                                 "Type in destination page number",
+                                                 self._current_page,
+                                                 0,
+                                                 self._hotkeys.get_max_pages(),
+                                                 1)
+        if accepted:
+            hotkeys_to_move = set()
+            for selection in self._ui.tvHotkeys.selectedItems():
+                hotkeys_to_move.add(selection.get_hotkey_ref())
+
+            info(
+                f"Moving {len(hotkeys_to_move)//2} hotkeys to page {new_page}")
+
+            for hotkey in hotkeys_to_move:
+                self._hotkeys.remove_hotkey(hotkey)
+                hotkey.set_page(new_page)
+                self._hotkeys.add_hotkey(hotkey)
+
+            self.reload_table_contents()
+            self.reload_hotkey_hooks()
+
     def reload_table_contents(self):
         """Reloads all items in the table
         """
+        FILE_MISSING_COLOR = QColor(0xEE3311)
+
         hotkey_page = self._hotkeys.get_page(self._current_page)
         self._ui.tvHotkeys.setSortingEnabled(False)
         self._ui.tvHotkeys.clearContents()
@@ -198,9 +236,14 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             keys_str = keys_to_string(hotkey.get_keys())
             # The keys
             item_keys = HotkeyTableItemWidget(keys_str, hotkey)
-            self._ui.tvHotkeys.setItem(i, 0, item_keys)
             # The file
-            item_file = HotkeyTableItemWidget(filename, hotkey)
+            filename_short = get_shortened_filename(filename)
+            item_file = HotkeyTableItemWidget(filename_short, hotkey)
+            if not path.exists(filename):
+                item_file.setBackgroundColor(FILE_MISSING_COLOR)
+                item_keys.setBackgroundColor(FILE_MISSING_COLOR)
+
+            self._ui.tvHotkeys.setItem(i, 0, item_keys)
             self._ui.tvHotkeys.setItem(i, 1, item_file)
         self._ui.tvHotkeys.setSortingEnabled(True)
 
@@ -239,11 +282,11 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             self.play_temporary_tts
         )
 
-        # Open tts manager
-        HotkeyListener.add_hotkey(
-            self._settings.get_keys_tts_open_manager(),
-            self.on_TTS_manager
-        )
+        # Open tts manager TODO: make this use signals so that it works
+        # HotkeyListener.add_hotkey(
+        #     self._settings.get_keys_tts_open_manager(),
+        #     self.on_TTS_manager
+        # )
 
         # Increase volume
         HotkeyListener.add_hotkey(
