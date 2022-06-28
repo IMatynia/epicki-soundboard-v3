@@ -1,12 +1,19 @@
-from logging import info
-from translators import google
-from ui.layouts.Ui_TTSManagerDialog import Ui_TTSManagerDialog
-from ui.utility_popup_box import MessageBoxesInterface
+from src.constants import TEMP_TTS_FILE
+from src.gtts_handle import get_languages, generate_tts_ogg
 from PySide2.QtWidgets import (
     QDialog
 )
-from src.gtts_handle import get_languages, generate_tts_ogg
-from src.constants import TEMP_TTS_FILE
+from ui.utility_popup_box import MessageBoxesInterface
+from ui.layouts.Ui_TTSManagerDialog import Ui_TTSManagerDialog
+from logging import info
+from gtts.tts import gTTSError
+_TRANSLATOR_WORKING = True
+try:
+    from translators import google
+except Exception as e:
+    info("Google translator failed to initialize, details:")
+    info(e)
+    _TRANSLATOR_WORKING = False
 
 
 class TTSManagerDialog(QDialog, MessageBoxesInterface):
@@ -38,14 +45,22 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
         if len(text) == 0:
             self.show_popup("Type in some text before generating!")
         else:
-            generate_tts_ogg(text, lang, TEMP_TTS_FILE)
-            self.accept()
+            try:
+                generate_tts_ogg(text, lang, TEMP_TTS_FILE)
+                self.accept()
+            except gTTSError as e:
+                info("GTTS generation failed, details:")
+                info(e)
+                self.show_popup("Could not generate, check log for more info")
 
     def on_translate(self):
         text = self._ui.teText.toPlainText()
         lang = self._ui.cbLanguage.currentText()
         if len(text) == 0:
             self.show_popup("Type in some text before generating!")
+        elif not _TRANSLATOR_WORKING:
+            self.show_popup(
+                "Google translator is not working, check logs for more info")
         else:
             new_text = google(text, 'auto', lang)
             self._ui.teText.setText(new_text)
