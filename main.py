@@ -1,4 +1,14 @@
 import logging as log
+
+log.basicConfig(
+    filename="runtime.log",
+    filemode="w",
+    format="[%(asctime)s->%(levelname)s->%(module)s" +
+    "->%(funcName)s]: %(message)s",
+    datefmt="%H:%M:%S",
+    level=log.INFO
+)
+
 import sys
 from PySide2.QtWidgets import QApplication
 from ui.main_window import MainWindow
@@ -6,14 +16,6 @@ import os
 from src.hotkey_listener import HotkeyListener
 from src.audio_handle import stop_all_sounds
 from src.constants import DEFAULT_CUSTOM_FOLDER
-
-log.basicConfig(
-    format="[%(asctime)s->%(levelname)s->%(module)s" +
-    "->%(funcName)s]: %(message)s",
-    datefmt="%H:%M:%S",
-    level=log.INFO
-)
-
 
 def setup():
     try:
