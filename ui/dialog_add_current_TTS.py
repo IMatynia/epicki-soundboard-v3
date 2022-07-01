@@ -10,7 +10,7 @@ from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_TTS_FILE
 
 
 class AddCurrentTTSDialog(QDialog, MessageBoxesInterface):
-    def __init__(self, parent, hotkey_list, page) -> None:
+    def __init__(self, parent, hotkey_list, last_tts_lang, last_tts_prompt, page) -> None:
         QDialog.__init__(self, parent)
         MessageBoxesInterface.__init__(self)
         self._ui = Ui_AddFromTTS()
@@ -23,6 +23,10 @@ class AddCurrentTTSDialog(QDialog, MessageBoxesInterface):
         self._ui.buttonPlaceholder.addWidget(self._scan_button)
         self._ui.bSave.clicked.connect(self.on_save)
         self._ui.bCancel.clicked.connect(self.reject)
+
+        # Set default name, if TTS text was preserved
+        if last_tts_prompt:
+            self._ui.leName.setText(f"[{last_tts_lang}] {last_tts_prompt[0:min(len(last_tts_prompt), 15)]}")
 
     def on_save(self):
         custom_name = self._ui.leName.text()

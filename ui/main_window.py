@@ -109,7 +109,11 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         elif selected_type == "Current TTS":
             if path.exists(TEMP_TTS_FILE):
                 dialog = AddCurrentTTSDialog(
-                    self, self._hotkeys, self._current_page)
+                    self, 
+                    self._hotkeys,
+                    self._settings.get_tts_language(),
+                    self._settings.get_last_tts_prompt(), 
+                    self._current_page)
                 dialog.show()
 
                 if dialog.exec_():
