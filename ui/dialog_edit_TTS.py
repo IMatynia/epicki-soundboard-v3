@@ -1,5 +1,6 @@
 from src.constants import TEMP_TTS_FILE
 from src.gtts_handle import get_languages, generate_tts_ogg
+from src.settings import Settings
 from PySide2.QtWidgets import (
     QDialog
 )
@@ -7,19 +8,10 @@ from ui.utility_popup_box import MessageBoxesInterface
 from ui.layouts.Ui_TTSManagerDialog import Ui_TTSManagerDialog
 from logging import info
 from gtts.tts import gTTSError
-_TRANSLATOR_WORKING = True
-try:
-    from translators import google
-except Exception as e:
-    info("Google translator failed to initialize, details:")
-    info(e)
-    _TRANSLATOR_WORKING = False
 
 
 class TTSManagerDialog(QDialog, MessageBoxesInterface):
-    _DEFAULT_LANGUAGE = "en"
-
-    def __init__(self, parent, settings) -> None:
+    def __init__(self, parent, settings: "Settings") -> None:
         QDialog.__init__(self, parent)
         MessageBoxesInterface.__init__(self)
         self._ui = Ui_TTSManagerDialog()
@@ -33,7 +25,7 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
 
         # Fill the language combo box
         self._ui.cbLanguage.addItems(get_languages())
-        self._ui.cbLanguage.setCurrentText(TTSManagerDialog._DEFAULT_LANGUAGE)
+        self._ui.cbLanguage.setCurrentText(self._settings.get_tts_language())
 
     def on_cancel(self):
         self.reject()
@@ -41,6 +33,9 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
     def on_generate(self):
         text = self._ui.teText.toPlainText()
         lang = self._ui.cbLanguage.currentText()
+
+        self._settings.set_last_tts_prompt(text)
+        self._settings.set_tts_language(lang)
 
         if len(text) == 0:
             self.show_popup("Type in some text before generating!")
@@ -54,11 +49,19 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
                 self.show_popup("Could not generate, check log for more info")
 
     def on_translate(self):
+        translator_works = True
+        try:
+            from translators import google
+        except Exception as e:
+            info("Google translator failed to initialize, details:")
+            info(e)
+            translator_works = False
+
         text = self._ui.teText.toPlainText()
         lang = self._ui.cbLanguage.currentText()
         if len(text) == 0:
             self.show_popup("Type in some text before generating!")
-        elif not _TRANSLATOR_WORKING:
+        elif not translator_works:
             self.show_popup(
                 "Google translator is not working, check logs for more info")
         else:
