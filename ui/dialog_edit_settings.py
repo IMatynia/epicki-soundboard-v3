@@ -5,7 +5,7 @@ from src.settings import Settings
 from PySide2.QtWidgets import (
     QDialog, QLabel
 )
-from src.audio_handle import get_devices_supporting_stereo_output
+from src.audio_devices import get_devices_supporting_stereo_output
 
 
 class HotkeyScanUIElement:

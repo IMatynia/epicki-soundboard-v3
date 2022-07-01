@@ -1,4 +1,5 @@
 from src.settings import Settings
+from src.audio_devices import get_devices
 import sounddevice
 import soundfile
 import threading
@@ -6,7 +7,6 @@ import numpy as np
 from logging import info
 from os import path
 
-_DEVICE_LIST = list(sounddevice.query_devices())
 _ALL_AUDIO_THREADS = []
 BLOCK_SIZE = 1024
 
@@ -90,19 +90,3 @@ def multi_audio_play_async(filename, settings: "Settings"):
         stop_all_sounds()
     th = MultiAudioPlayThread(filename, settings)
     th.start()
-
-
-def get_device_number(device):
-    return _DEVICE_LIST.index(device)
-
-
-def get_devices_supporting_stereo_output():
-    out = {}
-    for i, device in enumerate(get_devices()):
-        if device["max_input_channels"] == 0 and device["max_output_channels"] >= 2 and device["hostapi"] == 0:
-            out[i] = device
-    return out
-
-
-def get_devices():
-    return _DEVICE_LIST

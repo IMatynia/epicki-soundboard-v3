@@ -1,5 +1,6 @@
 from logging import info
 from src.key import Key
+from src.audio_devices import get_device_number
 
 SETTINGS_VERSION = "V1.0"
 
@@ -13,11 +14,11 @@ class Settings:
     def __init__(self) -> None:
         # Default values | private variables with prefix _s_ are loaded/saved into the config file
         self._s_additional_device = None
-        self._s_additional_device_number = -1
         self._s_window_h_pos = 200
         self._s_window_v_pos = 200
         self._s_main_on = True
         self._s_singular = False
+        self._s_tts_language = "en"
 
         # Shortcuts, defaults:
         self._s_toggle_main = {Key("/", 111), Key("-", 109)}
@@ -30,7 +31,8 @@ class Settings:
 
         # Not saved:
         self._volume_multiplier = 1.0
-        self._current_page = 0
+        self._last_tts_prompt = None
+        self._additional_device_number = -1
 
     def load_from_dict(self, dict_data):
         """Loads all the values for "_s_" fields, raises an error if the
@@ -59,6 +61,9 @@ class Settings:
             except KeyError:
                 raise MissingConfigFieldError(key_nicer)
 
+        self._additional_device_number = get_device_number(
+            self._s_additional_device)
+
     def save_to_dict(self):
         """Stores all "_s_" fields in the dict
 
@@ -83,11 +88,11 @@ class Settings:
         return self._s_additional_device
 
     def get_additional_device_num(self):
-        return self._s_additional_device_number
+        return self._additional_device_number
 
     def set_additional_device(self, name, id):
         self._s_additional_device = name
-        self._s_additional_device_number = id
+        self._additional_device_number = id
 
     def get_window_h_pos(self):
         return self._s_window_h_pos
@@ -135,6 +140,18 @@ class Settings:
     def modify_volume_multiplier(self, multiplier):
         self._volume_multiplier *= multiplier
         info(f"Volume multiplier changed to {self._volume_multiplier}")
+
+    def get_last_tts_prompt(self):
+        return self._last_tts_prompt
+
+    def set_last_tts_prompt(self, new_prompt):
+        self._last_tts_prompt = new_prompt
+
+    def get_tts_language(self):
+        return self._s_tts_language
+
+    def set_tts_language(self, new_lang):
+        self._s_tts_language = new_lang
 
     # :/ not fun
     def get_keys_toggle_main(self):
