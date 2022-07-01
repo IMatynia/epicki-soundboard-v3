@@ -2,7 +2,11 @@ from src.key import Key
 
 
 class AudioHotkey:
-    def __init__(self, keys=None, filename=None, page=None):
+    """Saves information about key combination and the file to play when
+    the combination is pressed
+    """
+
+    def __init__(self, keys: "set" = None, filename: "str" = None, page: "int" = None):
         """Creates an instance of soundboard hotkey
 
         Args:
@@ -23,10 +27,10 @@ class AudioHotkey:
     def set_filename(self, new_file):
         self._filename = new_file
 
-    def get_keys(self):
+    def get_keys(self) -> "set":
         return self._keys
 
-    def set_keys(self, new_keys):
+    def set_keys(self, new_keys: "set"):
         assert isinstance(new_keys, set)
         self._keys = new_keys
 
@@ -49,7 +53,12 @@ class AudioHotkey:
     def __str__(self) -> str:
         return f"Hotkey {self._keys} activating file {self._filename}"
 
-    def load_from_dict(self, dict):
+    def load_from_dict(self, dict: "dict"):
+        """Loads all fields from the provided dict
+
+        Args:
+            dict (dict): data
+        """
         self._page = dict["page"]
         self._filename = dict["filename"]
         self._keys = set()
@@ -58,7 +67,12 @@ class AudioHotkey:
             key.load_from_dict(key_dict)
             self._keys.add(key)
 
-    def save_as_dict(self):
+    def save_as_dict(self) -> "dict":
+        """Saves fields to a dict
+
+        Returns:
+            dict: data
+        """
         return {
             "keys": [key.save_to_dict() for key in sorted(self._keys)],
             "filename": self._filename,
@@ -73,38 +87,75 @@ class HotkeyCollisionError(Exception):
 
 
 class AudioHotkeyList:
-    def __init__(self, max_size=256) -> None:
+    """Stores the audio hotkeys with an easy access to individual pages and
+    duplicate checking
+    """
+
+    def __init__(self, max_size: "int" = 256) -> None:
+        """Creates an AudioHotkeyList object
+
+        Args:
+            max_size (int, optional): maximum number of pages. Defaults to 256.
+        """
         self._max_size = max_size
         self._pages = [list() for i in range(max_size)]
 
-    def add_hotkey(self, hotkey):
+    def add_hotkey(self, hotkey: "AudioHotkey"):
+        """Adds a hotkey to the correct page, checks for collisions
+
+        Args:
+            hotkey (AudioHotkey): the new hotkey
+
+        Raises:
+            HotkeyCollisionError: when there is a collision
+        """
         if self.check_collision(hotkey):
             raise HotkeyCollisionError(hotkey)
         self._pages[hotkey.get_page()].append(hotkey)
 
-    def get_page(self, page_number):
+    def get_page(self, page_number) -> "list":
+        """Returns all hotkeys from a given page
+
+        Args:
+            page_number (int): desired page number
+
+        Returns:
+            list: contents of the page
+        """
         return self._pages[page_number]
 
     def get_max_pages(self):
         return self._max_size
 
-    def remove_hotkey(self, hotkey):
+    def remove_hotkey(self, hotkey: "AudioHotkey"):
         self._pages[hotkey.get_page()].remove(hotkey)
 
-    def check_collision(self, hotkey):
+    def check_collision(self, hotkey: "AudioHotkey"):
         return hotkey in self._pages[hotkey.get_page()]
 
     def purge_data(self):
+        """Deletes everything from the list
+        """
         self._pages = [list() for i in range(self._max_size)]
 
-    def load_from_list(self, list):
+    def load_from_list(self, list: "list"):
+        """Loads data from a list of serializable data
+
+        Args:
+            list (list): a list of descriptions
+        """
         self.purge_data()
         for hotkey_data in list:
             hk = AudioHotkey()
             hk.load_from_dict(hotkey_data)
             self.add_hotkey(hk)
 
-    def save_to_list(self):
+    def save_to_list(self) -> "list":
+        """Saves stored audio hotkey into a serializable format
+
+        Returns:
+            list: data
+        """
         out = []
         for page in self._pages:
             out.extend([hotkey.save_as_dict() for hotkey in page])
