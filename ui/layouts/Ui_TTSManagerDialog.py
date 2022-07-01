@@ -42,6 +42,7 @@ class Ui_TTSManagerDialog(object):
 
         self.teText = QTextEdit(TTSManagerDialog)
         self.teText.setObjectName(u"teText")
+        self.teText.setTabChangesFocus(True)
 
         self.verticalLayout.addWidget(self.teText)
 

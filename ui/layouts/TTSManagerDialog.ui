@@ -37,6 +37,9 @@
    </item>
    <item>
     <widget class="QTextEdit" name="teText">
+     <property name="tabChangesFocus">
+      <bool>true</bool>
+     </property>
      <property name="placeholderText">
       <string>Type text you want me to say</string>
      </property>
