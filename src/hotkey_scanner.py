@@ -55,8 +55,6 @@ class HotkeyScanner:
         if not self._current_bitset[code]:
             self._scanned_keys.add(Key(name, code))
             self._current_bitset[code] = True
-            info(
-                f"New press of {name}/{code}\n{self._current_bitset}")
         return True
 
     def _keyboard_hook_on_release(self, key):
