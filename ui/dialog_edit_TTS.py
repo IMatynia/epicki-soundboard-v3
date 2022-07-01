@@ -4,6 +4,9 @@ from src.settings import Settings
 from PySide2.QtWidgets import (
     QDialog
 )
+from PySide2.QtCore import (
+    Qt
+)
 from ui.utility_popup_box import MessageBoxesInterface
 from ui.layouts.Ui_TTSManagerDialog import Ui_TTSManagerDialog
 from logging import info
@@ -14,6 +17,9 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
     def __init__(self, parent, settings: "Settings") -> None:
         QDialog.__init__(self, parent)
         MessageBoxesInterface.__init__(self)
+
+        self.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
+
         self._ui = Ui_TTSManagerDialog()
         self._ui.setupUi(self)
         self._settings = settings
@@ -26,6 +32,11 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
         # Fill the language combo box
         self._ui.cbLanguage.addItems(get_languages())
         self._ui.cbLanguage.setCurrentText(self._settings.get_tts_language())
+
+        # Fill in text box with the last prompt
+        last_pompt = self._settings.get_last_tts_prompt()
+        if last_pompt:
+            self._ui.teText.setText(last_pompt)
 
     def on_cancel(self):
         self.reject()
