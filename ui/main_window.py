@@ -294,10 +294,10 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         )
 
         # Open tts manager TODO: make this use signals so that it works
-        # HotkeyListener.add_hotkey(
-        #     self._settings.get_keys_tts_open_manager(),
-        #     self.on_TTS_manager
-        # )
+        HotkeyListener.add_hotkey(
+            self._settings.get_keys_tts_open_manager(),
+            self._ui.actionOpen_tts_manager.trigger
+        )
 
         # Increase volume
         HotkeyListener.add_hotkey(
