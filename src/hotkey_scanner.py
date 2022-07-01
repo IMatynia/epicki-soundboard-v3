@@ -19,7 +19,7 @@ class HotkeyScanner:
         self._scanned_keys = None
 
     def start(self):
-        """Starts the hotkeys scanning. When completed, the callback will be called
+        """Starts the hotkeys scanning. When completed, the callback will be called. Disables hotkeys temporarily.
         """
         HotkeyListener.set_enabled(False)
         self._scanned_keys = set()

@@ -17,13 +17,10 @@ class HotkeyScanPushButton(QPushButton):
             self._keys = set()
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
-        self.clicked.connect(self.on_click)
+        self.clicked.connect(self.on_hotkey_scan_begin)
 
     def get_keys(self):
         return self._keys
-
-    def on_click(self):
-        self.on_hotkey_scan_begin()
 
     def on_hotkey_scan_begin(self):
         self.setText("...")
