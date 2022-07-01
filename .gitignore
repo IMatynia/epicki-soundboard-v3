@@ -5,7 +5,7 @@ __pycach*
 .vscode/
 _notes/
 *.ogg
-*.mp3
+/*.mp3
 make
 *.json
 *.bat
