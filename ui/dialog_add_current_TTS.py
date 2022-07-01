@@ -8,6 +8,8 @@ from PySide2.QtWidgets import (
 from src.audio_hotkey import AudioHotkey
 from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_TTS_FILE
 
+SHORT_NAME_LEN = 35
+
 
 class AddCurrentTTSDialog(QDialog, MessageBoxesInterface):
     def __init__(self, parent, hotkey_list, last_tts_lang, last_tts_prompt, page) -> None:
@@ -26,7 +28,8 @@ class AddCurrentTTSDialog(QDialog, MessageBoxesInterface):
 
         # Set default name, if TTS text was preserved
         if last_tts_prompt:
-            self._ui.leName.setText(f"[{last_tts_lang}] {last_tts_prompt[0:min(len(last_tts_prompt), 15)]}")
+            self._ui.leName.setText(
+                f"[{last_tts_lang}] {last_tts_prompt[0:min(len(last_tts_prompt), SHORT_NAME_LEN)]}")
 
     def on_save(self):
         custom_name = self._ui.leName.text()
