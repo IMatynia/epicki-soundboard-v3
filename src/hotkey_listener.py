@@ -1,30 +1,6 @@
 import pynput
 from bitarray import bitarray
-
-
-class KeyboardHotkeyCallback:
-    def __init__(self, keys, callback, args=None) -> None:
-        """Data class storing information about a hotkey combination
-
-        Args:
-            keys (iterable): keys to press to activate callback
-            callback (function): the callback to run
-            args (list): argument list to run callback with
-        """
-        self.key_bitmap = KeyboardHotkeyCallback.keys_to_bitset(keys)
-        self.callback = callback
-        self.args = args if args else []
-
-    def run(self):
-        self.callback(*self.args)
-
-    @staticmethod
-    def keys_to_bitset(keys):
-        bitmask = bitarray(2**8)
-        bitmask.setall(0)
-        for key in keys:
-            bitmask[key.vk] = True
-        return bitmask
+from src.keyboard_hotkey_callback import KeyboardHotkeyCallback
 
 
 class HotkeyListener:
@@ -33,17 +9,17 @@ class HotkeyListener:
     would only work if speciffically the given combination is provided.
     So in here if I set up a hotkey to keys "a" + "b", it will be detected 
     when I press "a" + "b" + "c" + "d" at the same time
-
-    Returns:
-        _type_: _description_
     """
-    _callbacks = None
-    _current_bitset = None
+    _callbacks: "list" = None
+    _current_bitset: "bitarray" = None
     _key_hook = None
-    _enabled = True
+    _enabled: "bool" = True
+    _initialized: "bool" = False
 
     @staticmethod
     def init():
+        """Initializes the listener
+        """
         HotkeyListener._callbacks = []
         HotkeyListener._current_bitset = bitarray(2**8)
         HotkeyListener._current_bitset.setall(0)
@@ -53,6 +29,7 @@ class HotkeyListener:
         )
         HotkeyListener._key_hook.start()
         HotkeyListener._enabled = True
+        HotkeyListener._initialized = True
 
     @staticmethod
     def add_hotkey(keys, callback, args=None):
@@ -63,6 +40,8 @@ class HotkeyListener:
             callback (function): callback to call if the combination is pressed
             args (list): arguments to call callback with
         """
+        if not HotkeyListener._initialized:
+            HotkeyListener.init()
         HotkeyListener._callbacks.append(
             KeyboardHotkeyCallback(keys, callback, args))
 
@@ -70,20 +49,23 @@ class HotkeyListener:
     def remove_all():
         """Removes all callbacks and hotkeys
         """
+        if not HotkeyListener._initialized:
+            HotkeyListener.init()
         HotkeyListener._callbacks.clear()
 
     @staticmethod
     def set_enabled(b):
-        """Can allow for suspention of all hotkeys
+        """Can allow for temporary suspention of all hotkeys
 
         Args:
             b (bool): should it work?
         """
+        if not HotkeyListener._initialized:
+            HotkeyListener.init()
         HotkeyListener._enabled = b
 
     @staticmethod
     def _keyboard_hook_on_press(key):
-
         if isinstance(key, pynput.keyboard.Key):
             code = key.value.vk
         else:
@@ -112,5 +94,7 @@ class HotkeyListener:
 
     @staticmethod
     def stop():
+        if not HotkeyListener._initialized:
+            return
         HotkeyListener.remove_all()
         HotkeyListener._key_hook.stop()
