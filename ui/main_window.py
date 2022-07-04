@@ -9,10 +9,10 @@ from ui.dialog_add_current_TTS import AddCurrentTTSDialog
 from ui.dialog_edit_TTS import TTSManagerDialog
 from ui.dialog_edit_settings import EditSettingsDialog
 from PySide2.QtWidgets import (
-    QMainWindow, QTableWidgetItem, QInputDialog
+    QMainWindow, QTableWidgetItem, QInputDialog, 
 )
 from PySide2.QtGui import (
-    QColor
+    QColor, QIcon
 )
 from logging import info
 from src.settings import Settings
@@ -38,6 +38,8 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         # UI setup
         QMainWindow.__init__(self, parent)
         MessageBoxesInterface.__init__(self)
+        self.setWindowIcon(QIcon("./media/logo.png"))
+
         self._app = app
         self._ui = Ui_MainWindow()
         self._ui.setupUi(self)
