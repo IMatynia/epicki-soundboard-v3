@@ -11,7 +11,12 @@ class MissingConfigFieldError(Exception):
 
 
 class Settings:
+    """A class representing program settings. Serializable to a dict object.
+    """
+
     def __init__(self) -> None:
+        """Initializes the object with default settings
+        """
         # Default values | private variables with prefix _s_ are loaded/saved into the config file
         self._s_additional_device = None
         self._s_window_h_pos = 200
@@ -34,7 +39,7 @@ class Settings:
         self._last_tts_prompt = None
         self._additional_device_number = -1
 
-    def load_from_dict(self, dict_data):
+    def load_from_dict(self, dict_data: "dict"):
         """Loads all the values for "_s_" fields, raises an error if the
         dict doesnt provide the data for a field
 
@@ -61,10 +66,13 @@ class Settings:
             except KeyError:
                 raise MissingConfigFieldError(key_nicer)
 
-        self._additional_device_number = get_device_number(
-            self._s_additional_device)
+        if self._s_additional_device is None:
+            self._additional_device_number = -1
+        else:
+            self._additional_device_number = get_device_number(
+                self._s_additional_device)
 
-    def save_to_dict(self):
+    def save_to_dict(self) -> "dict":
         """Stores all "_s_" fields in the dict
 
         Returns:
@@ -84,13 +92,13 @@ class Settings:
                     out[key_nicer] = self.__dict__[key]
         return out
 
-    def get_additional_device(self):
+    def get_additional_device(self) -> "str":
         return self._s_additional_device
 
-    def get_additional_device_num(self):
+    def get_additional_device_num(self) -> "int":
         return self._additional_device_number
 
-    def set_additional_device(self, name, id):
+    def set_additional_device(self, name: "str", id: "int"):
         self._s_additional_device = name
         self._additional_device_number = id
 
@@ -153,7 +161,7 @@ class Settings:
     def set_tts_language(self, new_lang):
         self._s_tts_language = new_lang
 
-    # :/ not fun
+    # :/ this is not fun
     def get_keys_toggle_main(self):
         return self._s_toggle_main
 
