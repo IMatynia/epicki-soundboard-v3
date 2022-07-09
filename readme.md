@@ -1,5 +1,6 @@
 # Epicki soundboard V3
-
+![logo](https://i.imgur.com/D5WVli0.png)
+![intro image](https://i.imgur.com/Hf7BZNO.png)
 ## Features
 
 - Playing audio on **2 devices at once** (the default device and a custom one, like a virtual cable)
@@ -49,6 +50,8 @@ Quick tips:
 - Edit settings under Data->Edit settings
 
 <!-- Dialog windows and explanations -->
+
+![dialog windows](https://i.imgur.com/tSqEz3L.png)
 
 ## Known limitaions
 
