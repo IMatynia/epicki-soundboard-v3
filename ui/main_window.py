@@ -295,7 +295,7 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             self.play_temporary_tts
         )
 
-        # Open tts manager TODO: make this use signals so that it works
+        # Open tts manager
         HotkeyListener.add_hotkey(
             self._settings.get_keys_tts_open_manager(),
             self._ui.actionOpen_tts_manager.trigger
@@ -317,13 +317,13 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
 
         # Next page
         HotkeyListener.add_hotkey(
-            {Key(">", 39)},
+            {Key("page_up", 33)},
             self._ui.bNextPage.click
         )
 
         # Prev page
         HotkeyListener.add_hotkey(
-            {Key("<", 37)},
+            {Key("page_down", 34)},
             self._ui.bPrevPage.click
         )
 
