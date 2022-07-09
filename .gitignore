@@ -10,3 +10,4 @@ make
 *.json
 *.bat
 *.log
+tests/test_data/rickroll.mp3
