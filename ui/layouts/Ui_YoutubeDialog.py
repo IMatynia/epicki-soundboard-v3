@@ -17,7 +17,7 @@ class Ui_AddYoutubeDL(object):
     def setupUi(self, AddYoutubeDL):
         if not AddYoutubeDL.objectName():
             AddYoutubeDL.setObjectName(u"AddYoutubeDL")
-        AddYoutubeDL.resize(360, 214)
+        AddYoutubeDL.resize(353, 264)
         self.verticalLayout_2 = QVBoxLayout(AddYoutubeDL)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
@@ -64,6 +64,16 @@ class Ui_AddYoutubeDL(object):
 
         self.verticalLayout.addWidget(self.progressBar)
 
+        self.leYTDLargs = QLineEdit(AddYoutubeDL)
+        self.leYTDLargs.setObjectName(u"leYTDLargs")
+
+        self.verticalLayout.addWidget(self.leYTDLargs)
+
+        self.leFFMPEGargs = QLineEdit(AddYoutubeDL)
+        self.leFFMPEGargs.setObjectName(u"leFFMPEGargs")
+
+        self.verticalLayout.addWidget(self.leFFMPEGargs)
+
         self.verticalSpacer = QSpacerItem(0, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
@@ -109,6 +119,8 @@ class Ui_AddYoutubeDL(object):
         self.leName.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Custom name", None))
         self.lKeys.setText(QCoreApplication.translate("AddYoutubeDL", u"Key combination", None))
         self.lStatus.setText(QCoreApplication.translate("AddYoutubeDL", u"Standing by...", None))
+        self.leYTDLargs.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Custom YTDL arguments (except -o)", None))
+        self.leFFMPEGargs.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Custom FFMPEG arguments (except output format)", None))
         self.bSave.setText(QCoreApplication.translate("AddYoutubeDL", u"Save", None))
         self.bCancel.setText(QCoreApplication.translate("AddYoutubeDL", u"Cancel", None))
     # retranslateUi

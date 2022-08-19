@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
-    <height>214</height>
+    <width>353</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -67,6 +67,20 @@
       <widget class="QProgressBar" name="progressBar">
        <property name="value">
         <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="leYTDLargs">
+       <property name="placeholderText">
+        <string>Custom YTDL arguments (except -o)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="leFFMPEGargs">
+       <property name="placeholderText">
+        <string>Custom FFMPEG arguments (except output format)</string>
        </property>
       </widget>
      </item>

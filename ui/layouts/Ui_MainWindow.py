@@ -41,6 +41,8 @@ class Ui_MainWindow(object):
         self.actionRemove_with_missing_files.setObjectName(u"actionRemove_with_missing_files")
         self.actionPurge_unused_files_in_customs_folder = QAction(MainWindow)
         self.actionPurge_unused_files_in_customs_folder.setObjectName(u"actionPurge_unused_files_in_customs_folder")
+        self.actionYoutube_dl_arguments = QAction(MainWindow)
+        self.actionYoutube_dl_arguments.setObjectName(u"actionYoutube_dl_arguments")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -167,9 +169,6 @@ class Ui_MainWindow(object):
         self.menuINFO = QMenu(self.menubar)
         self.menuINFO.setObjectName(u"menuINFO")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
 
         self.menubar.addAction(self.menuData.menuAction())
         self.menubar.addAction(self.menuText_to_speech.menuAction())
@@ -201,6 +200,7 @@ class Ui_MainWindow(object):
         self.action_Move_to_page.setText(QCoreApplication.translate("MainWindow", u"&Move to page", None))
         self.actionRemove_with_missing_files.setText(QCoreApplication.translate("MainWindow", u"&Remove with missing files", None))
         self.actionPurge_unused_files_in_customs_folder.setText(QCoreApplication.translate("MainWindow", u"&Purge unused files in customs folder", None))
+        self.actionYoutube_dl_arguments.setText(QCoreApplication.translate("MainWindow", u"&Custom FFMPEG arguments", None))
         ___qtablewidgetitem = self.tvHotkeys.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Hotkey", None));
         ___qtablewidgetitem1 = self.tvHotkeys.horizontalHeaderItem(1)

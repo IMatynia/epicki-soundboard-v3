@@ -303,7 +303,6 @@
    <addaction name="menuMisc"/>
    <addaction name="menuINFO"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave">
    <property name="text">
     <string>&amp;Save settings</string>
@@ -347,6 +346,11 @@
   <action name="actionPurge_unused_files_in_customs_folder">
    <property name="text">
     <string>&amp;Purge unused files in customs folder</string>
+   </property>
+  </action>
+  <action name="actionYoutube_dl_arguments">
+   <property name="text">
+    <string>&amp;Custom FFMPEG arguments</string>
    </property>
   </action>
  </widget>
