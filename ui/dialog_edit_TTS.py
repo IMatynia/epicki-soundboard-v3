@@ -76,5 +76,5 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
             self.show_popup(
                 "Google translator is not working, check logs for more info")
         else:
-            new_text = google(text, 'auto', lang)
+            new_text = google(query_text=text, from_language="en", to_language=lang)
             self._ui.teText.setText(new_text)
