@@ -1,5 +1,6 @@
-from src.ffmpeg_handle import ffmpeg_conversion
+from src.ffmpeg_handle import ffmpeg_conversion, FFMPEGRuntimeError
 from os import remove, path
+import pytest
 
 
 def test_conversion_mp3_to_ogg():
@@ -19,5 +20,6 @@ def test_conversion_invalid_file():
     source = "./tests/test_data/zoomba.mp3"
     destination = "./tests/test_data/zoomba.ogg"
 
-    assert ffmpeg_conversion(source, destination) != 0
+    with pytest.raises(FFMPEGRuntimeError):
+        ffmpeg_conversion(source, destination)
     assert not path.exists(destination)

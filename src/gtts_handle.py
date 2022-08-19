@@ -35,6 +35,5 @@ def generate_tts_ogg(text: "str", lang: "str", filename: "str") -> "int":
 
     tts = gtts.gTTS(text=text, lang=lang)
     tts.save(TEMP_TTS_FILE_MP3)
-    ret_val = ffmpeg_conversion(TEMP_TTS_FILE_MP3, filename)
+    ffmpeg_conversion(TEMP_TTS_FILE_MP3, filename)
     remove(TEMP_TTS_FILE_MP3)
-    return ret_val
