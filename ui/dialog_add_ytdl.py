@@ -22,6 +22,8 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
         self._hotkey = AudioHotkey(None, None, page)
         self._hotkey_list = hotkey_list
 
+        self._last_error = None
+
         # Set up triggers
         self._scan_button = HotkeyScanPushButton(self)
         self._ui.buttonPlaceholder.addWidget(self._scan_button)
@@ -66,14 +68,17 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
                 percentage = float(matches[0][1:-1])*0.9
                 self.set_status("Downloading media via YT-DL", percentage)
 
-        # Download mp3 via YT-DL
-        download_media(url, TEMP_YTDL_FILE, ytdl_args, callback)
-        # Download finished, FFMPEG conversion
-        self.set_status("Converting to OGG via FFMPEG", 95.0)
-        ret_val = ffmpeg_conversion(TEMP_YTDL_FILE, destination, ffmpeg_args)
-        if not ret_val == 0:
-            raise FFMPEGRuntimeError() 
-        remove(TEMP_YTDL_FILE)
+        try:
+            # Download mp3 via YT-DL
+            download_media(url, TEMP_YTDL_FILE, ytdl_args, callback)
+            # Download finished, FFMPEG conversion
+            self.set_status("Converting to OGG via FFMPEG", 95.0)
+            ffmpeg_conversion(
+                TEMP_YTDL_FILE, destination, ffmpeg_args)
+            remove(TEMP_YTDL_FILE)
+        except Exception as e:
+            self._last_error = e
+            self.reject()
         self.on_save_complete()
 
     def on_save_complete(self):
@@ -81,3 +86,6 @@ class AddYoutubeDialog(QDialog, MessageBoxesInterface):
 
     def get_hotkey(self):
         return self._hotkey
+
+    def get_last_error(self):
+        return self._last_error
