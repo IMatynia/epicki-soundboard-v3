@@ -9,21 +9,18 @@ log.basicConfig(
     level=log.INFO
 )
 
-import sys
-from PySide2.QtWidgets import QApplication
-from ui.main_window import MainWindow
-import os
-from src.hotkey_listener import HotkeyListener
-from src.audio_handle import stop_all_sounds
 from src.constants import DEFAULT_CUSTOM_FOLDER
+from src.audio_handle import stop_all_sounds
+from src.hotkey_listener import HotkeyListener
+import os
+from ui.main_window import MainWindow
+from PySide2.QtWidgets import QApplication
+import sys
 
 def setup():
-    try:
-        HotkeyListener.init()
+    HotkeyListener.init()
+    if not os.path.exists(DEFAULT_CUSTOM_FOLDER):
         os.mkdir(DEFAULT_CUSTOM_FOLDER)
-    except FileExistsError:
-        # good
-        pass
 
 
 def closure():

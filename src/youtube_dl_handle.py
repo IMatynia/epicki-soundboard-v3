@@ -1,4 +1,11 @@
+from logging import info
 import subprocess
+import re
+
+
+class YTDLRuntimeError(Exception):
+    def __init__(self, error_message) -> None:
+        super().__init__(f"YTDL runtime error\n{error_message}")
 
 
 def download_media(url, destination_file: "str", custom_args: list = None, callback=None):
@@ -26,9 +33,14 @@ def download_media(url, destination_file: "str", custom_args: list = None, callb
         "-o",
         destination_file]
 
-    proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+    proc = subprocess.Popen(
+        command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     if callback is None:
         return proc.wait()
     else:
         for line in proc.stdout:
-            callback(str(line)[2:-1])
+            line = str(line)[2:-1]
+            info(line)
+            if re.findall("ERROR:", line):
+                raise YTDLRuntimeError(line)
+            callback(line)

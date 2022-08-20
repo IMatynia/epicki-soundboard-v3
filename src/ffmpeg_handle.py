@@ -1,3 +1,4 @@
+from distutils.log import error
 import subprocess
 from logging import info
 from src.utils import check_if_program_present_in_path
@@ -9,8 +10,9 @@ class FFMPEGNotInPathError(Exception):
 
 
 class FFMPEGRuntimeError(Exception):
-    def __init__(self) -> None:
-        super().__init__("Runtime FFMPEG error occured")
+    def __init__(self, return_value, error_message) -> None:
+        super().__init__(
+            f"Runtime FFMPEG error occured\n-------\nReturn code: {return_value:X}\n-------\nError message:\n{error_message}")
 
 
 def ffmpeg_conversion(in_file: "str", out_file: "str", params: list = None) -> "int":
@@ -42,10 +44,9 @@ def ffmpeg_conversion(in_file: "str", out_file: "str", params: list = None) -> "
         "-vn",
         f"{out_file}"
     ]
-    startupinfo = subprocess.STARTUPINFO()
-    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
-    ret_val = subprocess.Popen(command, startupinfo=startupinfo).wait()
-
-    if not ret_val == 0:
-        raise FFMPEGRuntimeError()
+    try:
+        output = subprocess.check_output(
+            command, stderr=subprocess.STDOUT, shell=True)
+    except subprocess.CalledProcessError as e:
+        raise FFMPEGRuntimeError(e.returncode, e.output)
