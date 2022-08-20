@@ -15,7 +15,7 @@ from PySide2.QtGui import (
     QColor, QIcon
 )
 from logging import info
-from src.settings import Settings
+from src.settings import Settings, MissingConfigFieldError
 from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME, DEFAULT_SOUND_MULTIPLIER
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
 from src.key import keys_to_string, Key
@@ -370,5 +370,11 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
             info("Missing config file, using default settings")
         except json.JSONDecodeError:
             info("Config file invalid, using default settings")
+            self.show_error(
+                "Config file invalid, reverting to default settings")
+        except MissingConfigFieldError as e:
+            info(str(e))
+            self.show_error(str(e) + "\n\nUsing default")
+
         self.reload_table_contents()
         self.reload_hotkey_hooks()
