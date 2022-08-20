@@ -9,7 +9,7 @@ from ui.dialog_add_current_TTS import AddCurrentTTSDialog
 from ui.dialog_edit_TTS import TTSManagerDialog
 from ui.dialog_edit_settings import EditSettingsDialog
 from PySide2.QtWidgets import (
-    QMainWindow, QTableWidgetItem, QInputDialog, 
+    QMainWindow, QTableWidgetItem, QInputDialog,
 )
 from PySide2.QtGui import (
     QColor, QIcon
@@ -105,16 +105,18 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
                 if dialog.exec_():
                     new_hotkey = dialog.get_hotkey()
                     self._hotkeys.add_hotkey(new_hotkey)
+                elif dialog.get_last_error() is not None:
+                    self.show_error(str(dialog.get_last_error()))
             else:
                 self.show_popup(
                     "You need ffmpeg and youtube-dl in path to use this feature!")
         elif selected_type == "Current TTS":
             if path.exists(TEMP_TTS_FILE):
                 dialog = AddCurrentTTSDialog(
-                    self, 
+                    self,
                     self._hotkeys,
                     self._settings.get_tts_language(),
-                    self._settings.get_last_tts_prompt(), 
+                    self._settings.get_last_tts_prompt(),
                     self._current_page)
                 dialog.show()
 
