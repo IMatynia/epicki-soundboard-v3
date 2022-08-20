@@ -1,5 +1,6 @@
 import json
 from os import path
+import os
 from src.audio_handle import multi_audio_play_async, stop_all_sounds
 from ui.utility_popup_box import MessageBoxesInterface
 from ui.layouts.Ui_MainWindow import Ui_MainWindow
@@ -16,7 +17,7 @@ from PySide2.QtGui import (
 )
 from logging import info
 from src.settings import Settings, MissingConfigFieldError
-from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME, DEFAULT_SOUND_MULTIPLIER
+from src.constants import TEMP_TTS_FILE, CONFIG_FILENAME, DEFAULT_SOUND_MULTIPLIER, DEFAULT_CUSTOM_FOLDER
 from src.audio_hotkey import AudioHotkeyList, AudioHotkey
 from src.key import keys_to_string, Key
 from src.hotkey_listener import HotkeyListener
@@ -50,6 +51,15 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
 
         self.reload_config()
 
+        self.set_up_triggers()
+
+        # Minor UI setup
+        self._ui.lbPage.setText(f"{self._current_page}")
+        self._ui.tvHotkeys.sortItems(0)
+        self.move(self._settings.get_window_h_pos(),
+                  self._settings.get_window_v_pos())
+
+    def set_up_triggers(self):
         # Set up triggers
         self._ui.tvHotkeys.itemDoubleClicked.connect(
             self.on_hotkey_dobule_clicked)
@@ -70,14 +80,10 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
         self._ui.actionPlay_current_file.triggered.connect(
             self.play_temporary_tts)
         self._ui.action_Move_to_page.triggered.connect(self.on_move_to_page)
-        # self._ui.actionRemove_with_missing_files.connect(
-        #     self.on_remove_missing_files)
-
-        # Minor UI setup
-        self._ui.lbPage.setText(f"{self._current_page}")
-        self._ui.tvHotkeys.sortItems(0)
-        self.move(self._settings.get_window_h_pos(),
-                  self._settings.get_window_v_pos())
+        self._ui.actionRemove_with_missing_files.triggered.connect(
+            self.on_remove_hk_with_missing_files)
+        self._ui.actionPurge_unused_files_in_customs_folder.triggered.connect(
+            self.on_purge_unused)
 
     def on_hotkey_dobule_clicked(self, item: "HotkeyTableItemWidget"):
         filename = item.get_hotkey_ref().get_filename()
@@ -229,6 +235,28 @@ class MainWindow(QMainWindow, MessageBoxesInterface):
 
             self.reload_table_contents()
             self.reload_hotkey_hooks()
+
+    def on_remove_hk_with_missing_files(self):
+        current_page = self._hotkeys.get_page(self._current_page)
+        for hotkey in current_page:
+            if not os.path.exists(hotkey.get_filename()):
+                info(f"{hotkey} is missing it's file, removing")
+                self._hotkeys.remove_hotkey(hotkey)
+
+        self.reload_table_contents()
+        self.reload_hotkey_hooks()
+
+    def on_purge_unused(self):
+        current_page = self._hotkeys.get_page(self._current_page)
+        used_files = set()
+        for hotkey in current_page:
+            file_name = hotkey.get_filename().split("/")[-1]
+            used_files.add(file_name)
+
+        for file in os.scandir(DEFAULT_CUSTOM_FOLDER):
+            if file.name not in used_files:
+                os.remove(file.path)
+                info(f"Removing {file.name}")
 
     def closeEvent(self, event) -> None:
         if not self.check_config_changed():

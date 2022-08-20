@@ -1,4 +1,4 @@
-from src.key import Key
+from src.key import Key, keys_to_string
 
 
 class AudioHotkey:
@@ -51,7 +51,7 @@ class AudioHotkey:
         return self._keys == other.get_keys() and self._page == other.get_page()
 
     def __str__(self) -> str:
-        return f"Hotkey {self._keys} activating file {self._filename}"
+        return f"Hotkey {keys_to_string(self._keys)} activating file {self._filename}"
 
     def load_from_dict(self, dict: "dict"):
         """Loads all fields from the provided dict
