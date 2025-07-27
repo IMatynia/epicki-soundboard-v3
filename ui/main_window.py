@@ -9,10 +9,10 @@ from ui.dialog_add_ytdl import AddYoutubeDialog
 from ui.dialog_add_current_TTS import AddCurrentTTSDialog
 from ui.dialog_edit_TTS import TTSManagerDialog
 from ui.dialog_edit_settings import EditSettingsDialog
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QMainWindow, QTableWidgetItem, QInputDialog,
 )
-from PySide2.QtGui import (
+from PySide6.QtGui import (
     QColor, QIcon
 )
 from logging import info

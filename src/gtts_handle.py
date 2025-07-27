@@ -3,6 +3,7 @@ from src.ffmpeg_handle import ffmpeg_conversion
 from src.constants import TEMP_TTS_FILE_MP3
 import gtts
 
+"""Use lru cache"""
 _LANGUAGE_LIST = list(gtts.lang.tts_langs())
 
 

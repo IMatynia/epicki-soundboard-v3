@@ -2,7 +2,7 @@ from ui.layouts.Ui_SettingsDialog import Ui_SettingsDialog
 from ui.utility_popup_box import MessageBoxesInterface
 from ui.hotkey_scan_button import HotkeyScanPushButton
 from src.settings import Settings
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QDialog, QLabel
 )
 from src.audio_devices import get_devices_supporting_stereo_output

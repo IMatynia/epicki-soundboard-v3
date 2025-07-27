@@ -1,3 +1,4 @@
+"""Singleton is not necessary here"""
 import pynput
 from bitarray import bitarray
 from src.keyboard_hotkey_callback import KeyboardHotkeyCallback

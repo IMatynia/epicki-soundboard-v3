@@ -3,7 +3,7 @@ import re
 from ui.layouts.Ui_YoutubeDialog import Ui_AddYoutubeDL
 from ui.utility_popup_box import MessageBoxesInterface
 from ui.hotkey_scan_button import HotkeyScanPushButton
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QDialog
 )
 from src.audio_hotkey import AudioHotkey

@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QMessageBox, QAction
+from PySide6.QtWidgets import QMessageBox, QWidgetAction
 
 
 class MessageBoxesInterface:

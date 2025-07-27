@@ -1,6 +1,6 @@
 from ui.dialog_add_edit_file import AddEditFileDialog
 from src.audio_hotkey import AudioHotkey, AudioHotkeyList
-from PySide2.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow
 from src.key import Key
 from ui.hotkey_scan_button import HotkeyScanPushButton
 

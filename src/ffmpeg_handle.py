@@ -1,4 +1,4 @@
-from distutils.log import error
+"""Use FFMEG library instead of local ffmeg executable"""
 import subprocess
 from logging import info
 from src.utils import check_if_program_present_in_path

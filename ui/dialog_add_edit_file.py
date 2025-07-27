@@ -1,7 +1,7 @@
 from ui.layouts.Ui_AddEditFileDialog import Ui_AddEditFileDialog
 from ui.hotkey_scan_button import HotkeyScanPushButton
 from ui.utility_popup_box import MessageBoxesInterface
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QDialog, QFileDialog
 )
 from src.audio_hotkey import AudioHotkey

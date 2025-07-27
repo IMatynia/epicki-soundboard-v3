@@ -3,15 +3,23 @@
 ################################################################################
 ## Form generated from reading UI file 'MainWindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.15.2
+## Created by: Qt User Interface Compiler version 6.9.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QHBoxLayout,
+    QHeaderView, QMainWindow, QMenu, QMenuBar,
+    QPushButton, QSizePolicy, QSpinBox, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -19,9 +27,8 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(636, 529)
         font = QFont()
-        font.setFamily(u"Ubuntu")
+        font.setFamilies([u"Ubuntu"])
         font.setBold(False)
-        font.setWeight(50)
         MainWindow.setFont(font)
         self.actionSave = QAction(MainWindow)
         self.actionSave.setObjectName(u"actionSave")
@@ -47,34 +54,6 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.tvHotkeys = QTableWidget(self.centralwidget)
-        if (self.tvHotkeys.columnCount() < 2):
-            self.tvHotkeys.setColumnCount(2)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.tvHotkeys.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.tvHotkeys.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        self.tvHotkeys.setObjectName(u"tvHotkeys")
-        self.tvHotkeys.setFont(font)
-        self.tvHotkeys.setAcceptDrops(True)
-        self.tvHotkeys.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.tvHotkeys.setAlternatingRowColors(True)
-        self.tvHotkeys.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        self.tvHotkeys.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.tvHotkeys.setSortingEnabled(True)
-        self.tvHotkeys.horizontalHeader().setCascadingSectionResizes(True)
-        self.tvHotkeys.horizontalHeader().setHighlightSections(False)
-        self.tvHotkeys.horizontalHeader().setStretchLastSection(True)
-        self.tvHotkeys.verticalHeader().setVisible(False)
-        self.tvHotkeys.verticalHeader().setCascadingSectionResizes(False)
-        self.tvHotkeys.verticalHeader().setMinimumSectionSize(20)
-        self.tvHotkeys.verticalHeader().setDefaultSectionSize(22)
-        self.tvHotkeys.verticalHeader().setHighlightSections(False)
-        self.tvHotkeys.verticalHeader().setProperty("showSortIndicator", False)
-        self.tvHotkeys.verticalHeader().setStretchLastSection(False)
-
-        self.verticalLayout.addWidget(self.tvHotkeys)
-
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.cbSource = QComboBox(self.centralwidget)
@@ -83,7 +62,7 @@ class Ui_MainWindow(object):
         self.cbSource.addItem("")
         self.cbSource.addItem("")
         self.cbSource.setObjectName(u"cbSource")
-        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.cbSource.sizePolicy().hasHeightForWidth())
@@ -93,7 +72,7 @@ class Ui_MainWindow(object):
 
         self.bEdit = QPushButton(self.centralwidget)
         self.bEdit.setObjectName(u"bEdit")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.bEdit.sizePolicy().hasHeightForWidth())
@@ -108,13 +87,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.bRemove)
 
-        self.bPlay = QPushButton(self.centralwidget)
-        self.bPlay.setObjectName(u"bPlay")
-        sizePolicy1.setHeightForWidth(self.bPlay.sizePolicy().hasHeightForWidth())
-        self.bPlay.setSizePolicy(sizePolicy1)
-
-        self.horizontalLayout.addWidget(self.bPlay)
-
         self.bStop = QPushButton(self.centralwidget)
         self.bStop.setObjectName(u"bStop")
         sizePolicy1.setHeightForWidth(self.bStop.sizePolicy().hasHeightForWidth())
@@ -122,44 +94,62 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.bStop)
 
-        self.bPrevPage = QPushButton(self.centralwidget)
-        self.bPrevPage.setObjectName(u"bPrevPage")
-        sizePolicy1.setHeightForWidth(self.bPrevPage.sizePolicy().hasHeightForWidth())
-        self.bPrevPage.setSizePolicy(sizePolicy1)
-        self.bPrevPage.setMinimumSize(QSize(30, 0))
-        self.bPrevPage.setMaximumSize(QSize(30, 16777215))
-        self.bPrevPage.setBaseSize(QSize(0, 0))
+        self.bPlay = QPushButton(self.centralwidget)
+        self.bPlay.setObjectName(u"bPlay")
+        sizePolicy1.setHeightForWidth(self.bPlay.sizePolicy().hasHeightForWidth())
+        self.bPlay.setSizePolicy(sizePolicy1)
+        font1 = QFont()
+        font1.setFamilies([u"Ubuntu"])
+        font1.setPointSize(9)
+        font1.setBold(False)
+        self.bPlay.setFont(font1)
+        self.bPlay.setFlat(False)
 
-        self.horizontalLayout.addWidget(self.bPrevPage)
+        self.horizontalLayout.addWidget(self.bPlay)
 
-        self.lbPage = QLabel(self.centralwidget)
+        self.lbPage = QSpinBox(self.centralwidget)
         self.lbPage.setObjectName(u"lbPage")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.lbPage.sizePolicy().hasHeightForWidth())
-        self.lbPage.setSizePolicy(sizePolicy2)
-        self.lbPage.setMinimumSize(QSize(30, 0))
-        self.lbPage.setAlignment(Qt.AlignCenter)
+        self.lbPage.setMinimum(1)
+        self.lbPage.setMaximum(999)
+        self.lbPage.setValue(1)
 
         self.horizontalLayout.addWidget(self.lbPage)
-
-        self.bNextPage = QPushButton(self.centralwidget)
-        self.bNextPage.setObjectName(u"bNextPage")
-        sizePolicy1.setHeightForWidth(self.bNextPage.sizePolicy().hasHeightForWidth())
-        self.bNextPage.setSizePolicy(sizePolicy1)
-        self.bNextPage.setMinimumSize(QSize(30, 0))
-        self.bNextPage.setMaximumSize(QSize(30, 16777215))
-
-        self.horizontalLayout.addWidget(self.bNextPage)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.tvHotkeys = QTableWidget(self.centralwidget)
+        if (self.tvHotkeys.columnCount() < 2):
+            self.tvHotkeys.setColumnCount(2)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.tvHotkeys.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.tvHotkeys.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        self.tvHotkeys.setObjectName(u"tvHotkeys")
+        self.tvHotkeys.setFont(font)
+        self.tvHotkeys.setAcceptDrops(True)
+        self.tvHotkeys.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.tvHotkeys.setAlternatingRowColors(True)
+        self.tvHotkeys.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.tvHotkeys.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.tvHotkeys.setSortingEnabled(True)
+        self.tvHotkeys.horizontalHeader().setCascadingSectionResizes(True)
+        self.tvHotkeys.horizontalHeader().setHighlightSections(False)
+        self.tvHotkeys.horizontalHeader().setStretchLastSection(True)
+        self.tvHotkeys.verticalHeader().setVisible(False)
+        self.tvHotkeys.verticalHeader().setCascadingSectionResizes(False)
+        self.tvHotkeys.verticalHeader().setMinimumSectionSize(20)
+        self.tvHotkeys.verticalHeader().setDefaultSectionSize(22)
+        self.tvHotkeys.verticalHeader().setHighlightSections(False)
+        self.tvHotkeys.verticalHeader().setProperty(u"showSortIndicator", False)
+        self.tvHotkeys.verticalHeader().setStretchLastSection(False)
+
+        self.verticalLayout.addWidget(self.tvHotkeys)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 636, 24))
+        self.menubar.setGeometry(QRect(0, 0, 636, 33))
         self.menuData = QMenu(self.menubar)
         self.menuData.setObjectName(u"menuData")
         self.menuText_to_speech = QMenu(self.menubar)
@@ -201,10 +191,6 @@ class Ui_MainWindow(object):
         self.actionRemove_with_missing_files.setText(QCoreApplication.translate("MainWindow", u"&Remove with missing files", None))
         self.actionPurge_unused_files_in_customs_folder.setText(QCoreApplication.translate("MainWindow", u"&Purge unused files in customs folder", None))
         self.actionYoutube_dl_arguments.setText(QCoreApplication.translate("MainWindow", u"&Custom FFMPEG arguments", None))
-        ___qtablewidgetitem = self.tvHotkeys.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Hotkey", None));
-        ___qtablewidgetitem1 = self.tvHotkeys.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"File", None));
         self.cbSource.setItemText(0, QCoreApplication.translate("MainWindow", u"Add from...", None))
         self.cbSource.setItemText(1, QCoreApplication.translate("MainWindow", u"Audio file", None))
         self.cbSource.setItemText(2, QCoreApplication.translate("MainWindow", u"Youtube-dl", None))
@@ -213,11 +199,18 @@ class Ui_MainWindow(object):
         self.cbSource.setCurrentText(QCoreApplication.translate("MainWindow", u"Add from...", None))
         self.bEdit.setText(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.bRemove.setText(QCoreApplication.translate("MainWindow", u"Remove", None))
+        self.bStop.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+#if QT_CONFIG(tooltip)
+        self.bPlay.setToolTip(QCoreApplication.translate("MainWindow", u"Play selected", None))
+#endif // QT_CONFIG(tooltip)
         self.bPlay.setText(QCoreApplication.translate("MainWindow", u"Play", None))
-        self.bStop.setText(QCoreApplication.translate("MainWindow", u"Stop all", None))
-        self.bPrevPage.setText(QCoreApplication.translate("MainWindow", u"<<", None))
-        self.lbPage.setText(QCoreApplication.translate("MainWindow", u"1", None))
-        self.bNextPage.setText(QCoreApplication.translate("MainWindow", u">>", None))
+#if QT_CONFIG(tooltip)
+        self.lbPage.setToolTip(QCoreApplication.translate("MainWindow", u"Page number", None))
+#endif // QT_CONFIG(tooltip)
+        ___qtablewidgetitem = self.tvHotkeys.horizontalHeaderItem(0)
+        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Hotkey", None));
+        ___qtablewidgetitem1 = self.tvHotkeys.horizontalHeaderItem(1)
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"File", None));
         self.menuData.setTitle(QCoreApplication.translate("MainWindow", u"&Data", None))
         self.menuText_to_speech.setTitle(QCoreApplication.translate("MainWindow", u"&Text-to-speech", None))
         self.menuMisc.setTitle(QCoreApplication.translate("MainWindow", u"&Misc", None))

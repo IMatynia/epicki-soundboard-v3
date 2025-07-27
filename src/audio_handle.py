@@ -1,3 +1,4 @@
+"""Separation of responsibilities - why does an audio playing thread also add itself to a thread pool and holds a static reference"""
 from src.settings import Settings
 from src.audio_devices import get_devices
 import sounddevice

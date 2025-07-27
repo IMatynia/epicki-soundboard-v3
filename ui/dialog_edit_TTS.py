@@ -1,10 +1,10 @@
 from src.constants import TEMP_TTS_FILE
 from src.gtts_handle import get_languages, generate_tts_ogg
 from src.settings import Settings
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QDialog
 )
-from PySide2.QtCore import (
+from PySide6.QtCore import (
     Qt
 )
 from ui.utility_popup_box import MessageBoxesInterface

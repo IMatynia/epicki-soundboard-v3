@@ -14,7 +14,7 @@ from src.audio_handle import stop_all_sounds
 from src.hotkey_listener import HotkeyListener
 import os
 from ui.main_window import MainWindow
-from PySide2.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 import sys
 
 def setup():

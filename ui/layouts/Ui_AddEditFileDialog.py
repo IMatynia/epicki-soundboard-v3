@@ -3,15 +3,21 @@
 ################################################################################
 ## Form generated from reading UI file 'AddEditFileDialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.15.2
+## Created by: Qt User Interface Compiler version 6.9.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QDialog, QFormLayout, QHBoxLayout,
+    QLabel, QLayout, QLineEdit, QPushButton,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_AddEditFileDialog(object):
     def setupUi(self, AddEditFileDialog):
@@ -26,34 +32,34 @@ class Ui_AddEditFileDialog(object):
         self.bChooseFile = QPushButton(AddEditFileDialog)
         self.bChooseFile.setObjectName(u"bChooseFile")
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.bChooseFile)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.bChooseFile)
 
         self.leFilePath = QLineEdit(AddEditFileDialog)
         self.leFilePath.setObjectName(u"leFilePath")
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.leFilePath)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.leFilePath)
 
         self.label = QLabel(AddEditFileDialog)
         self.label.setObjectName(u"label")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label)
+        self.formLayout.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label)
 
         self.buttonPlaceholder = QVBoxLayout()
         self.buttonPlaceholder.setObjectName(u"buttonPlaceholder")
 
-        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.buttonPlaceholder)
+        self.formLayout.setLayout(1, QFormLayout.ItemRole.FieldRole, self.buttonPlaceholder)
 
 
         self.verticalLayout.addLayout(self.formLayout)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setSizeConstraint(QLayout.SetMinimumSize)
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 

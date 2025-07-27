@@ -1,3 +1,4 @@
+"""Pydatnic..."""
 from src.key import Key, keys_to_string
 
 

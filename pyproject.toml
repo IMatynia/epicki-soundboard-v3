@@ -1,0 +1,25 @@
+[project]
+name = "epicki-soundboard-v3"
+version = "3.1.0"
+description = "A soundboard app with neat functionalities."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bitarray>=3.5.2",
+    "chemical>=1.0.1",
+    "gtts>=2.5.4",
+    "numpy>=2.3.1",
+    "pydantic>=2.11.7",
+    "pynput>=1.8.1",
+    "pyside6>=6.9.1",
+    "rtoml>=0.12.0",
+    "sounddevice>=0.5.2",
+    "soundfile>=0.13.1",
+    "translators>=6.0.1",
+    "typer>=0.16.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]
