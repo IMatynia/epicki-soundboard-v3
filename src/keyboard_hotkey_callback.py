@@ -1,4 +1,6 @@
+from typing import Callable
 from bitarray import bitarray
+from src.config.config import KeyPress
 
 
 class KeyboardHotkeyCallback:
@@ -6,7 +8,7 @@ class KeyboardHotkeyCallback:
     the callback with arguments to call
     """
 
-    def __init__(self, keys: "set", callback, args: "list" = None) -> None:
+    def __init__(self, keys: set[KeyPress], callback: Callable) -> None:
         """Create KeyboardHotkeyCallback instance
 
         Args:
@@ -16,12 +18,10 @@ class KeyboardHotkeyCallback:
         """
         self.key_bitmap = KeyboardHotkeyCallback.keys_to_bitset(keys)
         self.callback = callback
-        self.args = args if args else []
 
     def run(self):
-        """Calls the callback with args
-        """
-        self.callback(*self.args)
+        """Calls the callback with args"""
+        self.callback()
 
     @staticmethod
     def keys_to_bitset(keys: "set") -> "bitarray":

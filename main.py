@@ -1,31 +1,25 @@
 import logging as log
-
-log.basicConfig(
-    filename="runtime.log",
-    filemode="w",
-    format="[%(asctime)s->%(levelname)s->%(module)s" +
-    "->%(funcName)s]: %(message)s",
-    datefmt="%H:%M:%S",
-    level=log.INFO
-)
-
-from src.constants import DEFAULT_CUSTOM_FOLDER
-from src.audio_handle import stop_all_sounds
+from src.audio_playback_provider import AudioPlaybackProvider
 from src.hotkey_listener import HotkeyListener
-import os
 from ui.main_window import MainWindow
 from PySide6.QtWidgets import QApplication
 import sys
 
+
+log.basicConfig(
+    format="[%(asctime)s->%(levelname)s->%(module)s" + "->%(funcName)s]: %(message)s",
+    datefmt="%H:%M:%S",
+    level=log.INFO,
+)
+
+
 def setup():
     HotkeyListener.init()
-    if not os.path.exists(DEFAULT_CUSTOM_FOLDER):
-        os.mkdir(DEFAULT_CUSTOM_FOLDER)
 
 
 def closure():
     HotkeyListener.stop()
-    stop_all_sounds()
+    AudioPlaybackProvider.stop_all_sounds()
 
 
 def main(args):

@@ -7,7 +7,6 @@ requires-python = ">=3.13"
 dependencies = [
     "bitarray>=3.5.2",
     "chemical>=1.0.1",
-    "gtts>=2.5.4",
     "numpy>=2.3.1",
     "pydantic>=2.11.7",
     "pynput>=1.8.1",

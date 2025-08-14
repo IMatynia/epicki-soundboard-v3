@@ -5,3 +5,6 @@ all: compile-ui
 
 compile-ui:
     uv run -m tools.compile_ui 
+
+open_editor:
+    pyside6-designer.exe

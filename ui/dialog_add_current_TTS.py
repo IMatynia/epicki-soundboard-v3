@@ -1,57 +1,66 @@
 from shutil import copyfile
 from ui.layouts.Ui_AddTTSDialog import Ui_AddFromTTS
 from ui.hotkey_scan_button import HotkeyScanPushButton
-from ui.utility_popup_box import MessageBoxesInterface
-from PySide6.QtWidgets import (
-    QDialog
-)
-from src.audio_hotkey import AudioHotkey
-from src.constants import DEFAULT_CUSTOM_FOLDER, TEMP_TTS_FILE
+from ui.utility_popup_box import MessageBoxesSimple
+from PySide6.QtWidgets import QDialog
+from src.config.config import AppSoundboardHotkey, AppConfig, Hotkey
 
 SHORT_NAME_LEN = 35
 
 
-class AddCurrentTTSDialog(QDialog, MessageBoxesInterface):
-    def __init__(self, parent, hotkey_list, last_tts_lang, last_tts_prompt, page) -> None:
-        QDialog.__init__(self, parent)
-        MessageBoxesInterface.__init__(self)
+class AddCurrentTTSDialog(QDialog):
+    def __init__(self, parent, conifg: AppConfig, current_page: int) -> None:
+        super().__init__(parent)
         self._ui = Ui_AddFromTTS()
         self._ui.setupUi(self)
-        self._hotkey = AudioHotkey(None, None, page)
-        self._hotkey_list = hotkey_list
+        self._msg = MessageBoxesSimple(self)
+        self._config = conifg
 
         # Set up triggers
         self._scan_button = HotkeyScanPushButton(self)
         self._ui.buttonPlaceholder.addWidget(self._scan_button)
         self._ui.bSave.clicked.connect(self.on_save)
         self._ui.bCancel.clicked.connect(self.reject)
+        self._hotkey = None
+        self._page = current_page
 
         # Set default name, if TTS text was preserved
-        if last_tts_prompt:
-            self._ui.leName.setText(
-                f"[{last_tts_lang}] {last_tts_prompt[0:min(len(last_tts_prompt), SHORT_NAME_LEN)]}")
+        last_prompt = self._config.tts_config.prompt
+        lang = self._config.tts_config.language
+
+        self._ui.leName.setText(
+            f"[{lang}] {last_prompt[0 : min(len(last_prompt), SHORT_NAME_LEN)]}"
+        )
 
     def on_save(self):
         custom_name = self._ui.leName.text()
-
-        filename = f"{DEFAULT_CUSTOM_FOLDER}/{custom_name}.ogg"
-        self._hotkey.set_filename(filename)
-        self._hotkey.set_keys(self._scan_button.get_keys())
-
-        if self._hotkey.get_keys() is None or len(self._hotkey.get_keys()) == 0:
+        scanned_keys = self._scan_button.get_keys()
+        if scanned_keys is None or len(scanned_keys) == 0:
             # No keys
-            self.show_popup("Keys cant be empty!")
+            self._msg.show_popup("Keys cant be empty!")
+            return
+        hotkey = Hotkey(keys=scanned_keys)
 
-        elif self._hotkey_list.check_collision(self._hotkey):
-            # Collision
-            self.show_popup(
-                "This hotkey colides with another one on this page!")
-        else:
-            try:
-                copyfile(TEMP_TTS_FILE, filename)
-                self.accept()
-            except OSError:
-                self.show_popup(f"Filename {filename} is not allowed!")
+        tts_temp_file = self._config.audio_config.get_tts_temporary_file_path()
+        tts_cache_folder = self._config.audio_config.get_tts_cache_folder()
+        prefered_format = self._config.audio_config.prefered_universal_format
 
-    def get_hotkey(self):
-        return self._hotkey
+        if self._config.check_for_collisions(hotkey, self._page):
+            self._msg.show_popup("This hotkey colides with another one on this page!")
+            return
+
+        result_path = tts_cache_folder / f"{custom_name}.{prefered_format.value}"
+
+        try:
+            copyfile(tts_temp_file, result_path)
+            self._hotkey = AppSoundboardHotkey(
+                page=self._page, hotkey=hotkey, filename=result_path
+            )
+            self.accept()
+        except OSError:
+            self._msg.show_popup(f"Filename {result_path} is not allowed!")
+
+    def accept(self) -> None:
+        if self._hotkey:
+            self._config.add_soundboard_hotkey(self._hotkey)
+        return super().accept()

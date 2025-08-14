@@ -1,28 +1,23 @@
-from src.constants import TEMP_TTS_FILE
-from src.gtts_handle import get_languages, generate_tts_ogg
-from src.settings import Settings
-from PySide6.QtWidgets import (
-    QDialog
-)
-from PySide6.QtCore import (
-    Qt
-)
-from ui.utility_popup_box import MessageBoxesInterface
+from src.config.config import AppConfig
+from PySide6.QtWidgets import QDialog
+from PySide6.QtCore import Qt
+from src.translation_provider import TranslationProvider
+from src.tts_provider import TTSProvider
+from ui.utility_popup_box import MessageBoxesSimple
 from ui.layouts.Ui_TTSManagerDialog import Ui_TTSManagerDialog
 from logging import info
-from gtts.tts import gTTSError
 
 
-class TTSManagerDialog(QDialog, MessageBoxesInterface):
-    def __init__(self, parent, settings: "Settings") -> None:
-        QDialog.__init__(self, parent)
-        MessageBoxesInterface.__init__(self)
+class TTSManagerDialog(QDialog):
+    def __init__(self, parent, config: AppConfig) -> None:
+        super().__init__(parent)
+        self._msg = MessageBoxesSimple(self)
 
-        self.setWindowFlags(self.windowFlags() ^ Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(self.windowFlags() ^ Qt.WindowType.WindowStaysOnTopHint)
 
         self._ui = Ui_TTSManagerDialog()
         self._ui.setupUi(self)
-        self._settings = settings
+        self._config = config
 
         # Set up triggers
         self._ui.bCancel.clicked.connect(self.on_cancel)
@@ -30,11 +25,11 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
         self._ui.bTranslate.clicked.connect(self.on_translate)
 
         # Fill the language combo box
-        self._ui.cbLanguage.addItems(get_languages())
-        self._ui.cbLanguage.setCurrentText(self._settings.get_tts_language())
+        self._ui.cbLanguage.addItems(TTSProvider.get_all_languages())
+        self._ui.cbLanguage.setCurrentText(self._config.tts_config.language)
 
         # Fill in text box with the last prompt
-        last_pompt = self._settings.get_last_tts_prompt()
+        last_pompt = self._config.tts_config.prompt
         if last_pompt:
             self._ui.teText.setText(last_pompt)
 
@@ -45,36 +40,27 @@ class TTSManagerDialog(QDialog, MessageBoxesInterface):
         text = self._ui.teText.toPlainText()
         lang = self._ui.cbLanguage.currentText()
 
-        self._settings.set_last_tts_prompt(text)
-        self._settings.set_tts_language(lang)
+        self._config.tts_config.prompt = text
+        self._config.tts_config.language = lang
 
         if len(text) == 0:
-            self.show_popup("Type in some text before generating!")
+            self._msg.show_popup("Type in some text before generating!")
         else:
             try:
-                generate_tts_ogg(text, lang, TEMP_TTS_FILE)
+                TTSProvider.generate_tts(
+                    text, lang, self._config.audio_config.get_tts_temporary_file_path()
+                )
                 self.accept()
-            except gTTSError as e:
-                info("GTTS generation failed, details:")
+            except Exception as e:
+                info("TTS generation failed, details:")
                 info(e)
-                self.show_popup("Could not generate, check log for more info")
+                self._msg.show_popup(f"Could not generate: {e}, check log for more info")
 
     def on_translate(self):
-        translator_works = True
-        try:
-            from translators import google
-        except Exception as e:
-            info("Google translator failed to initialize, details:")
-            info(e)
-            translator_works = False
-
         text = self._ui.teText.toPlainText()
         lang = self._ui.cbLanguage.currentText()
         if len(text) == 0:
-            self.show_popup("Type in some text before generating!")
-        elif not translator_works:
-            self.show_popup(
-                "Google translator is not working, check logs for more info")
+            self._msg.show_popup("Type in some text before generating!")
         else:
-            new_text = google(query_text=text, from_language="en", to_language=lang)
-            self._ui.teText.setText(new_text)
+            translated = TranslationProvider.translate(text, lang)
+            self._ui.teText.setText(translated)

@@ -1,27 +1,42 @@
+from copy import copy
+from pathlib import Path
+from src.config.config import (
+    AppConfig,
+    AppSoundboardHotkey,
+    Hotkey,
+    SupportedPlaybackFormats,
+)
 from ui.layouts.Ui_AddEditFileDialog import Ui_AddEditFileDialog
 from ui.hotkey_scan_button import HotkeyScanPushButton
-from ui.utility_popup_box import MessageBoxesInterface
-from PySide6.QtWidgets import (
-    QDialog, QFileDialog
-)
-from src.audio_hotkey import AudioHotkey
-from src.ffmpeg_handle import ffmpeg_conversion
-from src.utils import check_if_program_present_in_path
-from os import path
+from ui.utility_popup_box import MessageBoxesSimple
+from PySide6.QtWidgets import QDialog, QFileDialog
 from logging import info
 
 
-class AddEditFileDialog(QDialog, MessageBoxesInterface):
-    def __init__(self, parent, hotkey_list, page, keys=None, file=None) -> None:
-        QDialog.__init__(self, parent)
-        MessageBoxesInterface.__init__(self)
+class AddEditFileDialog(QDialog):
+    _og: AppSoundboardHotkey | None
+
+    def __init__(
+        self,
+        parent,
+        config: AppConfig,
+        edited_hotkey: AppSoundboardHotkey | None,
+        current_page: int,
+    ) -> None:
+        super().__init__(parent)
+        self._msg = MessageBoxesSimple(self)
+        self._config = config
         self._ui = Ui_AddEditFileDialog()
         self._ui.setupUi(self)
-        self._hotkey = AudioHotkey(keys, file, page)
-        self._hotkey_list = hotkey_list
-
-        if file:
-            self.update_file_display()
+        if edited_hotkey:
+            self._og = copy(edited_hotkey)
+            self.update_file_display(edited_hotkey.filename)
+            keys = edited_hotkey.hotkey.keys
+        else:
+            self._og = None
+            keys = None
+        self._page = current_page
+        self._soundboard_hotkey = None
 
         # Set up triggers
         self._scan_button = HotkeyScanPushButton(self, keys)
@@ -38,51 +53,49 @@ class AddEditFileDialog(QDialog, MessageBoxesInterface):
 
         if not file:
             info("No file chosen")
-        else:
-            self._hotkey.set_filename(file)
-            self.update_file_display()
+            return
+
+        self.update_file_display(Path(file))
 
     def on_save(self):
-        filename = self._ui.leFilePath.text()
-        self._hotkey.set_filename(filename)
-        self._hotkey.set_keys(self._scan_button.get_keys())
+        filename = Path(self._ui.leFilePath.text())
+        keys = self._scan_button.get_keys()
 
-        self.setDisabled(True)
-        if not path.exists(filename):
-            # File does not exist
-            self.show_popup("Invalid file!")
-        elif self._hotkey.get_keys() is None or len(self._hotkey.get_keys()) == 0:
-            # No keys
-            self.show_popup("Keys cant be empty!")
-        elif self._hotkey_list.check_collision(self._hotkey):
-            # Collision
-            self.show_popup(
-                "This hotkey colides with another one on this page!")
-        elif filename.split(".")[-1] not in set(["ogg", "wav"]):
-            # Invalid data type
-            if check_if_program_present_in_path("ffmpeg"):
-                # Try to use ffmpeg
+        if filename is None or keys is None:
+            self._msg.show_popup("Missing filename or keys!")
+            return
 
-                choice = self.show_choice(
-                    "Do you want to automatically convert this media into OGG using ffmpeg? (Create a copy in OGG format)")
-                if choice:
-                    # Convert the media into ogg (or at least try, let ffmpeg handle it)
-                    ogg_filename = ".".join(filename.split(".")[0:-1]) + ".ogg"
-                    info(f"Converting {filename} to {ogg_filename}")
-                    ffmpeg_conversion(filename, ogg_filename)
-                    self._hotkey.set_filename(ogg_filename)
-                    self.accept()
+        if not filename.exists():
+            self._msg.show_popup("File does not exist!")
+            return
+
+        hotkey = Hotkey(keys=keys)
+        if self._config.check_for_collisions(hotkey, self._page):
+            self._msg.show_popup("The hotkey is colliding with a different one!")
+            return
+
+        if filename.suffix not in SupportedPlaybackFormats:
+            choice = self._msg.show_choice(
+                f"Unsupported media format chosen, would you like to convert it to prefered format? ({self._config.audio_config.prefered_universal_format})"
+            )
+            if choice:
+                # TODO: Handle conversion using the new dependency
+                self._msg.show_popup("TODO Format conversion")
+                return
             else:
-                # No ffmpeg available
-                self.show_popup(
-                    "This file format is not supported. Add FFMPEG to PATH to automatically convert")
-        else:
-            self.accept()
-        self.setDisabled(False)
+                return
 
-    def update_file_display(self):
-        text = self._hotkey.get_filename()
-        self._ui.leFilePath.setText(text)
+        self._soundboard_hotkey = AppSoundboardHotkey(
+            page=self._page, hotkey=hotkey, filename=filename
+        )
+        self.accept()
 
-    def get_hotkey(self):
-        return self._hotkey
+    def accept(self) -> None:
+        if self._soundboard_hotkey:
+            if self._og:
+                self._config.remove_soundboard_hotkey(self._og)
+            self._config.add_soundboard_hotkey(self._soundboard_hotkey)
+        return super().accept()
+
+    def update_file_display(self, filename: Path):
+        self._ui.leFilePath.setText(str(filename))

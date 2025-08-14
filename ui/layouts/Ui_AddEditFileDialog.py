@@ -8,92 +8,113 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDialog, QFormLayout, QHBoxLayout,
-    QLabel, QLayout, QLineEdit, QPushButton,
-    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
+from PySide6.QtCore import (
+    QCoreApplication,
+    QMetaObject,
+)
+from PySide6.QtWidgets import (
+    QFormLayout,
+    QHBoxLayout,
+    QLabel,
+    QLayout,
+    QLineEdit,
+    QPushButton,
+    QSizePolicy,
+    QSpacerItem,
+    QVBoxLayout,
+)
+
 
 class Ui_AddEditFileDialog(object):
     def setupUi(self, AddEditFileDialog):
         if not AddEditFileDialog.objectName():
-            AddEditFileDialog.setObjectName(u"AddEditFileDialog")
+            AddEditFileDialog.setObjectName("AddEditFileDialog")
         AddEditFileDialog.resize(360, 129)
         self.verticalLayout = QVBoxLayout(AddEditFileDialog)
-        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setObjectName("verticalLayout")
         self.formLayout = QFormLayout()
-        self.formLayout.setObjectName(u"formLayout")
-        self.formLayout.setSizeConstraint(QLayout.SetMaximumSize)
+        self.formLayout.setObjectName("formLayout")
+        self.formLayout.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
         self.bChooseFile = QPushButton(AddEditFileDialog)
-        self.bChooseFile.setObjectName(u"bChooseFile")
+        self.bChooseFile.setObjectName("bChooseFile")
 
         self.formLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.bChooseFile)
 
         self.leFilePath = QLineEdit(AddEditFileDialog)
-        self.leFilePath.setObjectName(u"leFilePath")
+        self.leFilePath.setObjectName("leFilePath")
 
         self.formLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.leFilePath)
 
         self.label = QLabel(AddEditFileDialog)
-        self.label.setObjectName(u"label")
+        self.label.setObjectName("label")
 
         self.formLayout.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label)
 
         self.buttonPlaceholder = QVBoxLayout()
-        self.buttonPlaceholder.setObjectName(u"buttonPlaceholder")
+        self.buttonPlaceholder.setObjectName("buttonPlaceholder")
 
-        self.formLayout.setLayout(1, QFormLayout.ItemRole.FieldRole, self.buttonPlaceholder)
-
+        self.formLayout.setLayout(
+            1, QFormLayout.ItemRole.FieldRole, self.buttonPlaceholder
+        )
 
         self.verticalLayout.addLayout(self.formLayout)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(
+            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
+        )
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
         self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setObjectName("horizontalLayout")
         self.horizontalLayout.setSizeConstraint(QLayout.SetMinimumSize)
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
         self.bSave = QPushButton(AddEditFileDialog)
-        self.bSave.setObjectName(u"bSave")
+        self.bSave.setObjectName("bSave")
 
         self.horizontalLayout.addWidget(self.bSave)
 
         self.bCancel = QPushButton(AddEditFileDialog)
-        self.bCancel.setObjectName(u"bCancel")
+        self.bCancel.setObjectName("bCancel")
 
         self.horizontalLayout.addWidget(self.bCancel)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout)
-
 
         self.retranslateUi(AddEditFileDialog)
 
         self.bSave.setDefault(True)
 
-
         QMetaObject.connectSlotsByName(AddEditFileDialog)
+
     # setupUi
 
     def retranslateUi(self, AddEditFileDialog):
-        AddEditFileDialog.setWindowTitle(QCoreApplication.translate("AddEditFileDialog", u"Add or edit hotkey", None))
-        self.bChooseFile.setText(QCoreApplication.translate("AddEditFileDialog", u"Select file", None))
-#if QT_CONFIG(tooltip)
+        AddEditFileDialog.setWindowTitle(
+            QCoreApplication.translate("AddEditFileDialog", "Add or edit hotkey", None)
+        )
+        self.bChooseFile.setText(
+            QCoreApplication.translate("AddEditFileDialog", "Select file", None)
+        )
+        # if QT_CONFIG(tooltip)
         self.leFilePath.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-        self.leFilePath.setPlaceholderText(QCoreApplication.translate("AddEditFileDialog", u"Path to file", None))
-        self.label.setText(QCoreApplication.translate("AddEditFileDialog", u"Key combination:", None))
-        self.bSave.setText(QCoreApplication.translate("AddEditFileDialog", u"Save", None))
-        self.bCancel.setText(QCoreApplication.translate("AddEditFileDialog", u"Cancel", None))
-    # retranslateUi
+        # endif // QT_CONFIG(tooltip)
+        self.leFilePath.setPlaceholderText(
+            QCoreApplication.translate("AddEditFileDialog", "Path to file", None)
+        )
+        self.label.setText(
+            QCoreApplication.translate("AddEditFileDialog", "Key combination:", None)
+        )
+        self.bSave.setText(
+            QCoreApplication.translate("AddEditFileDialog", "Save", None)
+        )
+        self.bCancel.setText(
+            QCoreApplication.translate("AddEditFileDialog", "Cancel", None)
+        )
 
+    # retranslateUi

@@ -16,18 +16,29 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QDialog, QHBoxLayout, QLabel,
-    QLayout, QLineEdit, QProgressBar, QPushButton,
-    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
+    QLayout, QLineEdit, QPushButton, QSizePolicy,
+    QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_AddYoutubeDL(object):
     def setupUi(self, AddYoutubeDL):
         if not AddYoutubeDL.objectName():
             AddYoutubeDL.setObjectName(u"AddYoutubeDL")
-        AddYoutubeDL.resize(353, 264)
+        AddYoutubeDL.resize(398, 214)
         self.verticalLayout_2 = QVBoxLayout(AddYoutubeDL)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.label = QLabel(AddYoutubeDL)
+        self.label.setObjectName(u"label")
+        self.label.setScaledContents(False)
+        self.label.setWordWrap(True)
+
+        self.verticalLayout.addWidget(self.label)
+
+        self.verticalSpacer = QSpacerItem(0, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
         self.leURL = QLineEdit(AddYoutubeDL)
         self.leURL.setObjectName(u"leURL")
 
@@ -47,7 +58,7 @@ class Ui_AddYoutubeDL(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lKeys.sizePolicy().hasHeightForWidth())
         self.lKeys.setSizePolicy(sizePolicy)
-        self.lKeys.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.lKeys.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.horizontalLayout_2.addWidget(self.lKeys)
 
@@ -64,40 +75,20 @@ class Ui_AddYoutubeDL(object):
 
         self.verticalLayout.addWidget(self.lStatus)
 
-        self.progressBar = QProgressBar(AddYoutubeDL)
-        self.progressBar.setObjectName(u"progressBar")
-        self.progressBar.setValue(0)
-
-        self.verticalLayout.addWidget(self.progressBar)
-
-        self.leYTDLargs = QLineEdit(AddYoutubeDL)
-        self.leYTDLargs.setObjectName(u"leYTDLargs")
-
-        self.verticalLayout.addWidget(self.leYTDLargs)
-
-        self.leFFMPEGargs = QLineEdit(AddYoutubeDL)
-        self.leFFMPEGargs.setObjectName(u"leFFMPEGargs")
-
-        self.verticalLayout.addWidget(self.leFFMPEGargs)
-
-        self.verticalSpacer = QSpacerItem(0, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
-
 
         self.verticalLayout_2.addLayout(self.verticalLayout)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setSizeConstraint(QLayout.SetMinimumSize)
+        self.horizontalLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.bSave = QPushButton(AddYoutubeDL)
-        self.bSave.setObjectName(u"bSave")
+        self.bActionButton = QPushButton(AddYoutubeDL)
+        self.bActionButton.setObjectName(u"bActionButton")
 
-        self.horizontalLayout.addWidget(self.bSave)
+        self.horizontalLayout.addWidget(self.bActionButton)
 
         self.bCancel = QPushButton(AddYoutubeDL)
         self.bCancel.setObjectName(u"bCancel")
@@ -110,14 +101,12 @@ class Ui_AddYoutubeDL(object):
 
         self.retranslateUi(AddYoutubeDL)
 
-        self.bSave.setDefault(True)
-
-
         QMetaObject.connectSlotsByName(AddYoutubeDL)
     # setupUi
 
     def retranslateUi(self, AddYoutubeDL):
         AddYoutubeDL.setWindowTitle(QCoreApplication.translate("AddYoutubeDL", u"Add from Youtube-dl", None))
+        self.label.setText(QCoreApplication.translate("AddYoutubeDL", u"Download media via youtube-dl or its forks. The default behaviour tries to download the media as audio only in the prefered file format. Parameters can be configured via the config file.", None))
 #if QT_CONFIG(tooltip)
         self.leURL.setToolTip("")
 #endif // QT_CONFIG(tooltip)
@@ -125,9 +114,7 @@ class Ui_AddYoutubeDL(object):
         self.leName.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Custom name", None))
         self.lKeys.setText(QCoreApplication.translate("AddYoutubeDL", u"Key combination", None))
         self.lStatus.setText(QCoreApplication.translate("AddYoutubeDL", u"Standing by...", None))
-        self.leYTDLargs.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Custom YTDL arguments (except -o)", None))
-        self.leFFMPEGargs.setPlaceholderText(QCoreApplication.translate("AddYoutubeDL", u"Custom FFMPEG arguments (except output format)", None))
-        self.bSave.setText(QCoreApplication.translate("AddYoutubeDL", u"Save", None))
+        self.bActionButton.setText(QCoreApplication.translate("AddYoutubeDL", u"Download", None))
         self.bCancel.setText(QCoreApplication.translate("AddYoutubeDL", u"Cancel", None))
     # retranslateUi
 

@@ -1,6 +1,6 @@
-"""Singleton is not necessary here"""
 import pynput
 from bitarray import bitarray
+from pynput.keyboard import Key, KeyCode
 from src.keyboard_hotkey_callback import KeyboardHotkeyCallback
 
 
@@ -11,26 +11,24 @@ class HotkeyListener:
     So in here if I set up a hotkey to keys "a" + "b", it will be detected 
     when I press "a" + "b" + "c" + "d" at the same time
     """
-    _callbacks: "list" = None
-    _current_bitset: "bitarray" = None
+    _callbacks: list[KeyboardHotkeyCallback] = []
+    _current_bitset: bitarray = bitarray(2**8)
     _key_hook = None
     _enabled: "bool" = True
     _initialized: "bool" = False
 
-    @staticmethod
-    def init():
+    @classmethod
+    def init(cls):
         """Initializes the listener
         """
-        HotkeyListener._callbacks = []
-        HotkeyListener._current_bitset = bitarray(2**8)
-        HotkeyListener._current_bitset.setall(0)
-        HotkeyListener._key_hook = pynput.keyboard.Listener(
-            HotkeyListener._keyboard_hook_on_press,
-            HotkeyListener._keyboard_hook_on_release
+        cls._current_bitset.setall(0)
+        cls._key_hook = pynput.keyboard.Listener(
+            cls._keyboard_hook_on_press,
+            cls._keyboard_hook_on_release
         )
-        HotkeyListener._key_hook.start()
-        HotkeyListener._enabled = True
-        HotkeyListener._initialized = True
+        cls._key_hook.start()
+        cls._enabled = True
+        cls._initialized = True
 
     @staticmethod
     def add_hotkey(keys, callback, args=None):
@@ -44,7 +42,7 @@ class HotkeyListener:
         if not HotkeyListener._initialized:
             HotkeyListener.init()
         HotkeyListener._callbacks.append(
-            KeyboardHotkeyCallback(keys, callback, args))
+            KeyboardHotkeyCallback(keys, callback))
 
     @staticmethod
     def remove_all():
@@ -66,25 +64,26 @@ class HotkeyListener:
         HotkeyListener._enabled = b
 
     @staticmethod
-    def _keyboard_hook_on_press(key):
-        if isinstance(key, pynput.keyboard.Key):
-            code = key.value.vk
+    def _keyboard_hook_on_press(key: Key | KeyCode | None) -> None:
+        if isinstance(key, Key):
+            code = key.value.vk or 0
+        elif isinstance(key, KeyCode):
+            code = key.vk or 0
         else:
-            code = key.vk
-
+            code = 0
         if HotkeyListener._enabled and not HotkeyListener._current_bitset[code]:
             HotkeyListener._current_bitset[code] = True
             HotkeyListener._run_matching_hotkey()
-        return True
 
     @staticmethod
-    def _keyboard_hook_on_release(key):
-        if isinstance(key, pynput.keyboard.Key):
-            code = key.value.vk
+    def _keyboard_hook_on_release(key: Key | KeyCode | None) -> None:
+        if isinstance(key, Key):
+            code = key.value.vk or 0
+        elif isinstance(key, KeyCode):
+            code = key.vk or 0
         else:
-            code = key.vk
+            code = 0
         HotkeyListener._current_bitset[code] = False
-        return True
 
     @staticmethod
     def _run_matching_hotkey():
@@ -98,4 +97,5 @@ class HotkeyListener:
         if not HotkeyListener._initialized:
             return
         HotkeyListener.remove_all()
-        HotkeyListener._key_hook.stop()
+        if HotkeyListener._key_hook:
+            HotkeyListener._key_hook.stop()
