@@ -100,8 +100,7 @@ class MainWindow(QMainWindow):
                     config.audio_config.main_device_on,
                 )
         except FileNotFoundError:
-            # TODO: handle this excpetion
-            pass
+            self._msg.show_error("File not found!")
 
     def on_add_hotkey(self, selected_type):
         with self._config.get() as config:
@@ -109,9 +108,11 @@ class MainWindow(QMainWindow):
                 # Open dialog window
                 dialog = AddEditFileDialog(self, config, None, self._current_page)
                 dialog.show()
+                dialog.exec()
             elif selected_type == "Youtube-dl":
                 dialog = AddYoutubeDialog(self, config, self._current_page)
                 dialog.show()
+                dialog.exec()
             elif selected_type == "Current TTS":
                 if config.audio_config.get_tts_temporary_file_path().exists():
                     dialog = AddCurrentTTSDialog(
@@ -120,6 +121,7 @@ class MainWindow(QMainWindow):
                         self._current_page,
                     )
                     dialog.show()
+                    dialog.exec()
                 else:
                     self._msg.show_popup(
                         "No temporary TTS file found. Generate one first."

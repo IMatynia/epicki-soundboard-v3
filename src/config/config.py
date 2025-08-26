@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+import logging
 from pathlib import Path
 from threading import Semaphore
 from pydantic import BaseModel, Field
@@ -50,6 +51,11 @@ class AppAudioConfig(BaseModel):
     def get_download_cache_folder(self):
         path = self.audio_cache_location / "downloads"
         path.mkdir(exist_ok=True, parents=True)
+        return path
+
+    def get_download_cache_file_by_name(self, name: str) -> Path:
+        path = self.audio_cache_location / "downloads" / f"{name}.{self.prefered_universal_format.value}"
+        path.parent.mkdir(exist_ok=True, parents=True)
         return path
 
 
@@ -154,8 +160,10 @@ class ConfigWrapper:
 
     @contextmanager
     def get(self):
-        with self._mutex:
-            yield self._config
+        # with self._mutex:
+        logging.debug("Config mutex LOCK")
+        yield self._config
+        logging.debug("Config mutex FREE")
 
     def toggle_play_on_main(self):
         with self._mutex:

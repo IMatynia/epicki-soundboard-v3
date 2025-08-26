@@ -1,7 +1,21 @@
 config_version = '3.1.0'
 window_h_pos = 200
 window_v_pos = 200
-soundboard_hotkeys = []
+
+[[soundboard_hotkeys]]
+page = 1
+filename = 'C:\Users\igorm\CODE\epicki-soundboard-v3\.audio_cache\downloads\a.wav'
+[[soundboard_hotkeys.hotkey.keys]]
+name = 'a'
+vk = 65
+
+[[soundboard_hotkeys.hotkey.keys]]
+name = 's'
+vk = 83
+
+[[soundboard_hotkeys.hotkey.keys]]
+name = 'd'
+vk = 68
 
 [youtube_dl]
 bin_path = 'C:/Users/igorm/CODE/yt-dlp.exe'
@@ -14,39 +28,39 @@ volume_multiplier = 1.0
 volume_multiplier_base = 1.25
 additional_device_id = 'null'
 audio_cache_location = '.audio_cache'
-prefered_universal_format = 'mp3'
+prefered_universal_format = 'wav'
 
 [tts_config]
 language = 'en'
 prompt = ''
 [[app_hotkeys.toggle_main_device_playback.keys]]
-name = '/'
-vk = 111
-
-[[app_hotkeys.toggle_main_device_playback.keys]]
 name = '-'
 vk = 109
-[[app_hotkeys.toggle_singular_playback.keys]]
+
+[[app_hotkeys.toggle_main_device_playback.keys]]
 name = '/'
 vk = 111
-
 [[app_hotkeys.toggle_singular_playback.keys]]
 name = '*'
 vk = 106
+
+[[app_hotkeys.toggle_singular_playback.keys]]
+name = '/'
+vk = 111
+[[app_hotkeys.increase_volume.keys]]
+name = '*'
+vk = 106
+
 [[app_hotkeys.increase_volume.keys]]
 name = '+'
 vk = 107
-
-[[app_hotkeys.increase_volume.keys]]
+[[app_hotkeys.decrease_volume.keys]]
 name = '*'
 vk = 106
+
 [[app_hotkeys.decrease_volume.keys]]
 name = '-'
 vk = 109
-
-[[app_hotkeys.decrease_volume.keys]]
-name = '*'
-vk = 106
 [[app_hotkeys.stop_all_sounds.keys]]
 name = 'End'
 vk = 35

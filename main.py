@@ -9,7 +9,7 @@ import sys
 log.basicConfig(
     format="[%(asctime)s->%(levelname)s->%(module)s" + "->%(funcName)s]: %(message)s",
     datefmt="%H:%M:%S",
-    level=log.INFO,
+    level=log.DEBUG,
 )
 
 

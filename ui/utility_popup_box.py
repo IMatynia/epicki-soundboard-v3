@@ -17,5 +17,5 @@ class MessageBoxesSimple:
         message_box.setWindowTitle(title)
         return message_box.exec() == QMessageBox.StandardButton.Yes
 
-    def show_error(self, message, title: str = "Soundboard - ERROR!!!!!"):
+    def show_error(self, message, title: str = "Soundboard - ERROR!"):
         QMessageBox.critical(self._widget, title, message)

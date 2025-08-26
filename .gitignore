@@ -11,3 +11,5 @@ make
 *.bat
 *.log
 tests/test_data/rickroll.mp3
+config.toml
+.audio*

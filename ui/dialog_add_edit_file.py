@@ -74,7 +74,7 @@ class AddEditFileDialog(QDialog):
             self._msg.show_popup("The hotkey is colliding with a different one!")
             return
 
-        if filename.suffix not in SupportedPlaybackFormats:
+        if filename.suffix[1:] not in SupportedPlaybackFormats:
             choice = self._msg.show_choice(
                 f"Unsupported media format chosen, would you like to convert it to prefered format? ({self._config.audio_config.prefered_universal_format})"
             )
